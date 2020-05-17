@@ -1,10 +1,13 @@
 {
   "login_start": "Below are list of strings for login da ",
-  "login_et_user_id": "Brugernavn",
-  "login_et_user_password": "Adgangskode",
+  "login_email": "Email",
+  "login_et_user_password": "Password",
   "login_btn_forgot_password": "Glemt adgangskode?",
   "login_btn_sign_in": "Log ind",
   "login_error_fill_fields": "Udfyld venligst alle felterne",
+  "login_send_password_recovery_email": "Send password_recovery_email",
+  "login_send_password_recovery_email_title": "Recover your password",
+  "login_no_account_yet": "No account yet? Sign up.",
   "login_end": "------------------------------------------------------------------------------------",
 
   "home_start": "Below are list of strings for home",
