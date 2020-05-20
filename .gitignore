@@ -27,8 +27,16 @@
 .pub-cache/
 .pub/
 build/
+*.inject.summary
+*.inject.dart
+*.g.dart
 
 # Android related
+**/android/.project
+**/android/.settings
+**/android/app/.classpath
+**/android/app/.project
+**/android/app/.settings
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
 **/android/captures/

@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Observer(
             builder: (context) {
               return _store.success
-                  ? navigate(context)
+                  ? navigateToHome(context)
                   : _showErrorMessage(_store.errorStore.errorMessage);
             },
           ),
@@ -126,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
               _buildUserIdField(),
               _buildPasswordField(),
               _buildForgotPasswordButton(),
-              _buildSignInButton(),
+              _buildLogInButton(),
               _buildSignUpButton(),
             ],
           ),
@@ -208,21 +208,21 @@ class _LoginScreenState extends State<LoginScreen> {
               AppLocalizations.of(context).translate('login_no_account_yet'),
               style: Theme.of(context)
                   .textTheme
-                  .caption
-                  .copyWith(color: Colors.blue[300], fontSize: 16),
+                  .subtitle1
+                  .copyWith(color: Colors.blue[300]),
             ),
             onPressed: () async {
-              //
+              navigateToRegister(context);
             },
           ),
         ));
   }
 
-  Widget _buildSignInButton() {
+  Widget _buildLogInButton() {
     return CupertinoButton(
-      child: Text(AppLocalizations.of(context).translate('login_btn_sign_in'),
+      child: Text(AppLocalizations.of(context).translate('login_btn_log_in'),
           style: new TextStyle(color: Colors.white)),
-      color: Colors.blue[400],
+      color: Theme.of(context).buttonColor,
       onPressed: () async {
         if (_store.canLogin) {
           DeviceUtils.hideKeyboard(context);
@@ -239,9 +239,9 @@ class _LoginScreenState extends State<LoginScreen> {
       margin: const EdgeInsets.only(top: 25.0),
       child: CupertinoButton(
         child: new Text(
-            AppLocalizations.of(context).translate('login_btn_sign_in'),
+            AppLocalizations.of(context).translate('login_btn_send_password_recovery_email'),
             style: new TextStyle(color: Colors.white)),
-        color: Colors.blue[400],
+        color: Theme.of(context).buttonColor,
         onPressed: () async {
           // if (_store.canLogin) {
           //   DeviceUtils.hideKeyboard(context);
@@ -254,7 +254,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget navigate(BuildContext context) {
+  Widget navigateToHome(BuildContext context) {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setBool(Preferences.is_logged_in, true);
     });
@@ -262,6 +262,15 @@ class _LoginScreenState extends State<LoginScreen> {
     Future.delayed(Duration(milliseconds: 0), () {
       Navigator.of(context).pushNamedAndRemoveUntil(
           Routes.home, (Route<dynamic> route) => false);
+    });
+
+    return Container();
+  }
+
+  Widget navigateToRegister(BuildContext context) {
+    Future.delayed(Duration(milliseconds: 0), () {
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          Routes.register, (Route<dynamic> route) => false);
     });
 
     return Container();
@@ -302,7 +311,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 .translate('login_send_password_recovery_email_title'),
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16.0,
             ),
           ),
           headerColor: Colors.blue[400],
