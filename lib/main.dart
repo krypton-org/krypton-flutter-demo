@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:inject/inject.dart';
+import 'package:krypton/krypton.dart';
 import 'package:provider/provider.dart';
 
 // global instance for app component
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
   final ThemeStore _themeStore = ThemeStore(appComponent.getRepository());
   final PostStore _postStore = PostStore(appComponent.getRepository());
   final LanguageStore _languageStore = LanguageStore(appComponent.getRepository());
-
+  final KryptonClient _krypton = KryptonClient("https://nusid.net/krypton-auth");
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
         Provider<ThemeStore>.value(value: _themeStore),
         Provider<PostStore>.value(value: _postStore),
         Provider<LanguageStore>.value(value: _languageStore),
+        Provider<KryptonClient>.value(value: _krypton)
       ],
       child: Observer(
         builder: (context) {

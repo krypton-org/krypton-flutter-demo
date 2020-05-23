@@ -60,6 +60,10 @@ dependencies:
 
   # Material Dialog
   material_dialog: ^0.0.9
+  
+  krypton:
+    path: ../krypton-flutter
+  
 
   # Dependency injection
   inject:

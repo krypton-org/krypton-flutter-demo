@@ -1,6 +1,6 @@
 import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/stores/form/form_store.dart';
+import 'package:boilerplate/stores/form/auth_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/app_icon_widget.dart';
@@ -37,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   //stores:---------------------------------------------------------------------
-  final _store = FormStore();
+  final _store = AuthStore();
 
   @override
   void initState() {
@@ -148,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 textController: _userEmailController,
                 inputAction: TextInputAction.next,
                 onChanged: (value) {
-                  _store.setUserId(_userEmailController.text);
+                  _store.setUserEmail(_userEmailController.text);
                 },
                 onFieldSubmitted: (value) {
                   FocusScope.of(context).requestFocus(_passwordFocusNode);
