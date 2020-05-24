@@ -1,6 +1,6 @@
 import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/stores/form/auth_store.dart';
+import 'package:boilerplate/stores/auth/auth_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/app_icon_widget.dart';
@@ -28,6 +28,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   //stores:---------------------------------------------------------------------
   ThemeStore _themeStore;
+  AuthStore _authStore;
 
   //focus node:-----------------------------------------------------------------
   FocusNode _passwordFocusNode;
@@ -36,7 +37,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
 
   //stores:---------------------------------------------------------------------
-  final _store = AuthStore();
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
+    _authStore = Provider.of<AuthStore>(context);
     _themeStore = Provider.of<ThemeStore>(context);
   }
 
@@ -82,15 +82,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               : Center(child: _buildRightSide()),
           Observer(
             builder: (context) {
-              return _store.success
+              return _authStore.success
                   ? navigateToHome(context)
-                  : _showErrorMessage(_store.errorStore.errorMessage);
+                  : _showErrorMessage(_authStore.errorStore.errorMessage);
             },
           ),
           Observer(
             builder: (context) {
               return Visibility(
-                visible: _store.loading,
+                visible: _authStore.loading,
                 child: CustomProgressIndicatorWidget(),
               );
             },
@@ -146,12 +146,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 textController: _userEmailController,
                 inputAction: TextInputAction.next,
                 onChanged: (value) {
-                  _store.setUserEmail(_userEmailController.text);
+                  _authStore.setUserEmail(_userEmailController.text);
                 },
                 onFieldSubmitted: (value) {
                   FocusScope.of(context).requestFocus(_passwordFocusNode);
                 },
-                errorText: _store.formErrorStore.userEmail),
+                errorText: _authStore.formErrorStore.userEmail),
             margin: const EdgeInsets.only(bottom: 0.0));
       },
     );
@@ -169,9 +169,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
           textController: _passwordController,
           focusNode: _passwordFocusNode,
-          errorText: _store.formErrorStore.password,
+          errorText: _authStore.formErrorStore.password,
           onChanged: (value) {
-            _store.setPassword(_passwordController.text);
+            _authStore.setPassword(_passwordController.text);
           },
         );
       },
@@ -207,9 +207,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               style: new TextStyle(color: Colors.white)),
           color: Theme.of(context).buttonColor,
           onPressed: () async {
-            if (_store.canLogin) {
+            if (_authStore.canLogin) {
               DeviceUtils.hideKeyboard(context);
-              _store.register();
+              _authStore.register();
             } else {
               _showErrorMessage('Please fill in all fields');
             }

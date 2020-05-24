@@ -10,6 +10,7 @@
   "login_no_account_yet": "No account yet? Sign up.",
   "login_btn_send_password_recovery_email": "Send",
   "login_end": "------------------------------------------------------------------------------------",
+
   "register_already_have_an_account": "Already have an account? Log in.", 
   "register_btn_sign_up": "Sign up",
 
@@ -18,5 +19,16 @@
   "home_tv_error": "Error",
   "home_tv_no_post_found": "No se han encontrado publicaciones",
   "home_tv_choose_language": "Elige lengua",
-  "home_end": "-------------------------------------------------------------------------------------"
+  "home_end": "-------------------------------------------------------------------------------------",
+
+  "settings_title": "Settings",
+  "settings_account": "Account",
+  "settings_general": "General",
+  "settings_change_password": "Change your password",
+  "settings_delete_account": "Delete your account",
+  "settings_change_email": "Change your email",
+  "settings_dark_mode": "Dark mode",
+  "settings_logout": "Log out",
+  "settings_language": "Choose Language"
+
 }

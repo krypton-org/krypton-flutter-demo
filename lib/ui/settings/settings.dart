@@ -1,20 +1,16 @@
 import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/stores/form/auth_store.dart';
-import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/stores/auth/auth_store.dart';
+import 'package:boilerplate/stores/language/language_store.dart';
+import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
-import 'package:boilerplate/widgets/app_icon_widget.dart';
-import 'package:boilerplate/widgets/empty_app_bar_widget.dart';
-import 'package:boilerplate/widgets/progress_indicator_widget.dart';
-import 'package:boilerplate/widgets/textfield_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:material_dialog/material_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../stores/theme/theme_store.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -22,214 +18,256 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  //text controllers:-----------------------------------------------------------
-  TextEditingController _userEmailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-
-  //stores:---------------------------------------------------------------------
+  LanguageStore _languageStore;
   ThemeStore _themeStore;
-
-  //focus node:-----------------------------------------------------------------
-  FocusNode _passwordFocusNode;
-
-  //form key:-------------------------------------------------------------------
-  final _formKey = GlobalKey<FormState>();
-
-  //stores:---------------------------------------------------------------------
-  final _store = AuthStore();
+  AuthStore _authStore;
 
   @override
   void initState() {
     super.initState();
-
-    _passwordFocusNode = FocusNode();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
+    _languageStore = Provider.of<LanguageStore>(context);
     _themeStore = Provider.of<ThemeStore>(context);
+    _authStore = Provider.of<AuthStore>(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      primary: true,
-      appBar: EmptyAppBar(),
+      appBar: _buildAppBar(),
       body: _buildBody(),
+    );
+  }
+
+  // app bar methods:-----------------------------------------------------------
+  Widget _buildAppBar() {
+    return AppBar(
+      leading: _buildHistoryBackButton(),
+      title: Text(AppLocalizations.of(context).translate('settings_title')),
+    );
+  }
+
+  Widget _buildHistoryBackButton() {
+    return Observer(
+      builder: (context) {
+        return IconButton(
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed(Routes.home);
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+          ),
+        );
+      },
     );
   }
 
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {
     return Material(
-      child: Stack(
+      child: Column(
         children: <Widget>[
-          MediaQuery.of(context).orientation == Orientation.landscape
-              ? Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: _buildLeftSide(),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: _buildRightSide(),
-                    ),
-                  ],
-                )
-              : Center(child: _buildRightSide()),
-          Observer(
-            builder: (context) {
-              return Visibility(
-                visible: _store.loading,
-                child: CustomProgressIndicatorWidget(),
-              );
-            },
-          )
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                  padding:
+                      new EdgeInsets.only(top: 10.0, left: 10.0, bottom: 5.0),
+                  child: Text(
+                    AppLocalizations.of(context).translate('settings_account'),
+                    textAlign: TextAlign.left,
+                    style: Theme.of(context).textTheme.title,
+                  ))),
+          _buildAccountSettingsList(),
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                  padding:
+                      new EdgeInsets.only(top: 10.0, left: 10.0, bottom: 5.0),
+                  child: Text(
+                      AppLocalizations.of(context)
+                          .translate('settings_general'),
+                      style: Theme.of(context).textTheme.title))),
+          _buildGeneralSettingsList(),
         ],
       ),
     );
   }
 
-  Widget _buildLeftSide() {
-    return SizedBox.expand(
-      child: Image.asset(
-        'assets/images/img_login.jpg',
-        fit: BoxFit.cover,
+  _buildAccountSettingsList() {
+    return ListView(shrinkWrap: true, children: <Widget>[
+      ListTile(
+        dense: true,
+        leading: Icon(Icons.email),
+        title: FlatButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed(Routes.changeEmail);
+            },
+            child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppLocalizations.of(context)
+                      .translate('settings_change_email'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                  style: Theme.of(context).textTheme.title,
+                ))),
       ),
-    );
+      ListTile(
+        dense: true,
+        leading: Icon(Icons.lock),
+        title: FlatButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed(Routes.changePassword);
+            },
+            child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppLocalizations.of(context)
+                      .translate('settings_change_password'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                  style: Theme.of(context).textTheme.title,
+                ))),
+      ),
+      ListTile(
+        dense: true,
+        leading: Icon(Icons.delete),
+        title: FlatButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed(Routes.deleteAccount);
+            },
+            child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppLocalizations.of(context)
+                      .translate('settings_delete_account'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                  style: Theme.of(context).textTheme.title,
+                ))),
+      )
+    ]);
   }
 
-  Widget _buildRightSide() {
-    return Form(
-      key: _formKey,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              AppIconWidget(image: 'assets/icons/ic_appicon.png'),
-              SizedBox(height: 50.0),
-              _buildUserIdField(),
-              _buildPasswordField(),
-              _buildSignUpButton(),
-              _buildLogInButton(),
-            ],
+  _buildGeneralSettingsList() {
+    return ListView(shrinkWrap: true, children: <Widget>[
+      ListTile(
+        dense: true,
+        leading: Icon(Icons.language),
+        title: FlatButton(
+            onPressed: () {
+              _buildLanguageDialog();
+            },
+            child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppLocalizations.of(context).translate('settings_language'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                  style: Theme.of(context).textTheme.title,
+                ))),
+      ),
+      ListTile(
+        dense: true,
+        leading: Icon(Icons.brightness_3),
+        title: FlatButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed(Routes.darkMode);
+            },
+            child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppLocalizations.of(context).translate('settings_dark_mode'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                  style: Theme.of(context).textTheme.title,
+                ))),
+      ),
+      ListTile(
+        dense: true,
+        leading: Icon(Icons.power_settings_new),
+        title: FlatButton(
+            onPressed: () async {
+              var preference = await SharedPreferences.getInstance();
+              preference.setBool(Preferences.is_logged_in, false);
+              await _authStore.logout();
+              Navigator.of(context).pushReplacementNamed(Routes.login);
+            },
+            child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppLocalizations.of(context).translate('settings_logout'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                  style: Theme.of(context).textTheme.title,
+                ))),
+      )
+    ]);
+  }
+
+  _buildLanguageDialog() {
+    _showDialog<String>(
+      context: context,
+      child: MaterialDialog(
+        borderRadius: 5.0,
+        enableFullWidth: true,
+        title: Text(
+          AppLocalizations.of(context).translate('home_tv_choose_language'),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
           ),
         ),
+        headerColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        closeButtonColor: Colors.white,
+        enableCloseButton: true,
+        enableBackButton: false,
+        onCloseButtonClicked: () {
+          Navigator.of(context).pop();
+        },
+        children: _languageStore.supportedLanguages
+            .map(
+              (object) => ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.all(0.0),
+                title: Text(
+                  object.language,
+                  style: TextStyle(
+                    color: _languageStore.locale == object.locale
+                        ? Theme.of(context).primaryColor
+                        : _themeStore.darkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  // change user language based on selected locale
+                  _languageStore.changeLanguage(object.locale);
+                },
+              ),
+            )
+            .toList(),
       ),
     );
   }
 
-  Widget _buildUserIdField() {
-    return Observer(
-      builder: (context) {
-        return Container(
-            child: TextFieldWidget(
-                hint: AppLocalizations.of(context).translate('login_email'),
-                inputType: TextInputType.emailAddress,
-                icon: Icons.person,
-                iconColor:
-                    _themeStore.darkMode ? Colors.white70 : Colors.black54,
-                textController: _userEmailController,
-                inputAction: TextInputAction.next,
-                onChanged: (value) {
-                  _store.setUserEmail(_userEmailController.text);
-                },
-                onFieldSubmitted: (value) {
-                  FocusScope.of(context).requestFocus(_passwordFocusNode);
-                },
-                errorText: _store.formErrorStore.userEmail),
-            margin: const EdgeInsets.only(bottom: 0.0));
-      },
-    );
-  }
-
-  Widget _buildPasswordField() {
-    return Observer(
-      builder: (context) {
-        return TextFieldWidget(
-          hint:
-              AppLocalizations.of(context).translate('login_et_user_password'),
-          isObscure: true,
-          padding: EdgeInsets.only(top: 16.0),
-          icon: Icons.lock,
-          iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
-          textController: _passwordController,
-          focusNode: _passwordFocusNode,
-          errorText: _store.formErrorStore.password,
-          onChanged: (value) {
-            _store.setPassword(_passwordController.text);
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildLogInButton() {
-    return Container(
-        margin: EdgeInsets.only(top: 20.0),
-        child: Center(
-          child: FlatButton(
-            child: Text(
-              AppLocalizations.of(context)
-                  .translate('register_already_have_an_account'),
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  .copyWith(color: Colors.blue[300]),
-            ),
-            onPressed: () async {
-              navigateToLogin(context);
-            },
-          ),
-        ));
-  }
-
-  Widget _buildSignUpButton() {
-    return Container(
-        margin: EdgeInsets.only(top: 20.0),
-        child: CupertinoButton(
-          child: Text(
-              AppLocalizations.of(context).translate('register_btn_sign_up'),
-              style: new TextStyle(color: Colors.white)),
-          color: Theme.of(context).buttonColor,
-          onPressed: () async {
-            if (_store.canLogin) {
-              DeviceUtils.hideKeyboard(context);
-              _store.login();
-            } else {
-              _showErrorMessage('Please fill in all fields');
-            }
-          },
-        ));
-  }
-
-  Widget navigateToHome(BuildContext context) {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setBool(Preferences.is_logged_in, true);
+  _showDialog<T>({BuildContext context, Widget child}) {
+    showDialog<T>(
+      context: context,
+      builder: (BuildContext context) => child,
+    ).then<void>((T value) {
+      // The value passed to Navigator.pop() or null.
     });
-
-    Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.home, (Route<dynamic> route) => false);
-    });
-
-    return Container();
-  }
-
-  Widget navigateToLogin(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.login, (Route<dynamic> route) => false);
-    });
-
-    return Container();
   }
 
   // General Methods:-----------------------------------------------------------
@@ -245,15 +283,5 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
 
     return SizedBox.shrink();
-  }
-
-  // dispose:-------------------------------------------------------------------
-  @override
-  void dispose() {
-    // Clean up the controller when the Widget is removed from the Widget tree
-    _userEmailController.dispose();
-    _passwordController.dispose();
-    _passwordFocusNode.dispose();
-    super.dispose();
   }
 }

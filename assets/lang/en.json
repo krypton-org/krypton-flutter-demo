@@ -18,6 +18,16 @@
   "home_tv_error": "Error",
   "home_tv_no_post_found": "No posts found",
   "home_tv_choose_language": "Choose Language",
-  "home_end": "-------------------------------------------------------------------------------------"
+  "home_end": "-------------------------------------------------------------------------------------",
+
+  "settings_title": "Settings",
+  "settings_account": "Account",
+  "settings_general": "General",
+  "settings_change_password": "Change your password",
+  "settings_delete_account": "Delete your account",
+  "settings_change_email": "Change your email",
+  "settings_dark_mode": "Dark mode",
+  "settings_logout": "Log out",
+  "settings_language": "Choose Language"
 
 }

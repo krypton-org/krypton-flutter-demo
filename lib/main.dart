@@ -5,6 +5,7 @@ import 'package:boilerplate/di/modules/local_module.dart';
 import 'package:boilerplate/di/modules/netwok_module.dart';
 import 'package:boilerplate/di/modules/preference_module.dart';
 import 'package:boilerplate/routes.dart';
+import 'package:boilerplate/stores/auth/auth_store.dart';
 import 'package:boilerplate/stores/language/language_store.dart';
 import 'package:boilerplate/stores/post/post_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
   final ThemeStore _themeStore = ThemeStore(appComponent.getRepository());
   final PostStore _postStore = PostStore(appComponent.getRepository());
   final LanguageStore _languageStore = LanguageStore(appComponent.getRepository());
-  final KryptonClient _krypton = KryptonClient("https://nusid.net/krypton-auth");
+  final AuthStore _authStore = AuthStore();
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
         Provider<ThemeStore>.value(value: _themeStore),
         Provider<PostStore>.value(value: _postStore),
         Provider<LanguageStore>.value(value: _languageStore),
-        Provider<KryptonClient>.value(value: _krypton)
+        Provider<AuthStore>.value(value: _authStore)
       ],
       child: Observer(
         builder: (context) {
