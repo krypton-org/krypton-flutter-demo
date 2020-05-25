@@ -26,7 +26,8 @@
   "settings_change_password": "Change your password",
   "settings_delete_account": "Delete your account",
   "settings_change_email": "Change your email",
-  "settings_dark_mode": "Dark mode",
+  "settings_dark_mode": "Dark Mode",
+  "settings_enable_dark_mode": "Enable Dark Mode",
   "settings_logout": "Log out",
   "settings_language": "Choose Language"
 

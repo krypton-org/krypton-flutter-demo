@@ -22,28 +22,8 @@ class DarkModeScreen extends StatefulWidget {
 }
 
 class _DarkModeScreenState extends State<DarkModeScreen> {
-  //text controllers:-----------------------------------------------------------
-  TextEditingController _userEmailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-
   //stores:---------------------------------------------------------------------
   ThemeStore _themeStore;
-
-  //focus node:-----------------------------------------------------------------
-  FocusNode _passwordFocusNode;
-
-  //form key:-------------------------------------------------------------------
-  final _formKey = GlobalKey<FormState>();
-
-  //stores:---------------------------------------------------------------------
-  final _store = AuthStore();
-
-  @override
-  void initState() {
-    super.initState();
-
-    _passwordFocusNode = FocusNode();
-  }
 
   @override
   void didChangeDependencies() {
@@ -82,39 +62,28 @@ class _DarkModeScreenState extends State<DarkModeScreen> {
       },
     );
   }
+  //            _themeStore.changeBrightnessToDark(!_themeStore.darkMode);
 
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {
     return Material(
-      child: Column(
-        children: <Widget>[],
-      ),
+      child: Column(children: <Widget>[
+        MergeSemantics(
+            child: ListTile(
+          title: Container(
+              padding: new EdgeInsets.only(top: 5.0, left: 10.0, bottom: 5.0),
+              child: Text(AppLocalizations.of(context).translate('settings_enable_dark_mode'), style: Theme.of(context).textTheme.title)),
+          trailing: CupertinoSwitch(
+            value: _themeStore.darkMode,
+            onChanged: (bool value) {
+              _themeStore.changeBrightnessToDark(value);
+            },
+          ),
+          onTap: () {
+            _themeStore.changeBrightnessToDark(!_themeStore.darkMode);
+          },
+        ))
+      ]),
     );
-  }
-
-
-  // General Methods:-----------------------------------------------------------
-  _showErrorMessage(String message) {
-    Future.delayed(Duration(milliseconds: 0), () {
-      if (message != null && message.isNotEmpty) {
-        FlushbarHelper.createError(
-          message: message,
-          title: AppLocalizations.of(context).translate('home_tv_error'),
-          duration: Duration(seconds: 3),
-        )..show(context);
-      }
-    });
-
-    return SizedBox.shrink();
-  }
-
-  // dispose:-------------------------------------------------------------------
-  @override
-  void dispose() {
-    // Clean up the controller when the Widget is removed from the Widget tree
-    _userEmailController.dispose();
-    _passwordController.dispose();
-    _passwordFocusNode.dispose();
-    super.dispose();
   }
 }

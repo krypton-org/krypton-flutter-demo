@@ -5,10 +5,8 @@ import 'package:boilerplate/data/network/rest_client.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/modules/preference_module.dart';
 import 'package:dio/dio.dart';
-import 'package:inject/inject.dart';
 import 'package:krypton/krypton.dart';
 
-@module
 class NetworkModule extends PreferenceModule {
   // ignore: non_constant_identifier_names
   final String TAG = "NetworkModule";
@@ -17,8 +15,6 @@ class NetworkModule extends PreferenceModule {
   /// A singleton dio provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
   Dio provideDio(SharedPreferenceHelper sharedPrefHelper, KryptonClient kryptonClient) {
     final dio = Dio();
 
@@ -53,15 +49,11 @@ class NetworkModule extends PreferenceModule {
   /// A singleton dio_client provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
   DioClient provideDioClient(Dio dio) => DioClient(dio);
 
   /// A singleton dio_client provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
   RestClient provideRestClient() => RestClient();
 
   // Api Providers:-------------------------------------------------------------
@@ -69,14 +61,10 @@ class NetworkModule extends PreferenceModule {
   /// A singleton post_api provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
   PostApi providePostApi(DioClient dioClient, RestClient restClient) =>
       PostApi(dioClient, restClient);
   
   /// Krypton singleton instance.
-  @provide
-  @singleton
   KryptonClient provideKrypton() =>
       KryptonClient("https://nusid.net/krypton-auth");
 }

@@ -1,6 +1,5 @@
 import 'package:boilerplate/constants/app_theme.dart';
 import 'package:boilerplate/constants/strings.dart';
-import 'package:boilerplate/di/components/app_component.dart';
 import 'package:boilerplate/di/modules/local_module.dart';
 import 'package:boilerplate/di/modules/netwok_module.dart';
 import 'package:boilerplate/di/modules/preference_module.dart';
@@ -15,8 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:inject/inject.dart';
-import 'package:krypton/krypton.dart';
 import 'package:provider/provider.dart';
 
 // global instance for app component
@@ -39,7 +36,6 @@ void main() {
   });
 }
 
-@provide
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   // Create your store as a final variable in a base Widget. This works better

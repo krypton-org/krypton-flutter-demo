@@ -63,14 +63,6 @@ dependencies:
   
   krypton:
     path: ../krypton-flutter
-  
-
-  # Dependency injection
-  inject:
-    git:
-      url: https://github.com/google/inject.dart.git
-      path: package/inject
-      ref: 7c3cbf6
 
 dependency_overrides:
   source_gen: 0.9.4+7

@@ -45,6 +45,10 @@ abstract class _AuthStore with Store {
   bool loading = false;
 
   @computed
+  bool get canUpdateEmail =>
+      !formErrorStore.hasErrorsInLogin && userEmail.isNotEmpty;
+
+  @computed
   bool get canLogin =>
       !formErrorStore.hasErrorsInLogin && userEmail.isNotEmpty && password.isNotEmpty;
 
@@ -67,6 +71,12 @@ abstract class _AuthStore with Store {
   @action
   void setPassword(String value) {
     password = value;
+  }
+
+  @action
+  void resetTransaction() {
+    success = false;
+    loading = false;
   }
 
   @action
@@ -124,6 +134,23 @@ abstract class _AuthStore with Store {
           : "Something went wrong, please check your internet connection and try again";
       print(e);
     }
+  
+
+  } 
+
+  Future updateEmail() async {
+    loading = true;
+    Future.delayed(Duration(milliseconds: 2000)).then((future) {
+      loading = false;
+      success = true;
+    }).catchError((e) {
+      loading = false;
+      success = false;
+      errorStore.errorMessage = e.toString().contains("ERROR_USER_NOT_FOUND")
+          ? "Username and password doesn't match"
+          : "Something went wrong, please check your internet connection and try again";
+      print(e);
+    });
   }
 
   @action
