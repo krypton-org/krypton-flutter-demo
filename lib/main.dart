@@ -15,11 +15,26 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-
-// global instance for app component
-AppComponent appComponent;
+import 'package:redux/redux.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 void main() {
+
+  final store = Store<SearchState>(
+    searchReducer,
+    initialState: SearchInitial(),
+    middleware: [
+      // The following middleware both achieve the same goal: Load search
+      // results from github in response to SearchActions.
+      //
+      // One is implemented as a normal middleware, the other is implemented as
+      // an epic for demonstration purposes.
+
+//        SearchMiddleware(GithubClient()),
+      EpicMiddleware<SearchState>(SearchEpic(GithubClient())),
+    ],
+  );
+
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -27,16 +42,15 @@ void main() {
     DeviceOrientation.landscapeRight,
     DeviceOrientation.landscapeLeft,
   ]).then((_) async {
-    appComponent = await AppComponent.create(
-      NetworkModule(),
-      LocalModule(),
-      PreferenceModule(),
-    );
-    runApp(appComponent.app);
+    runApp(new App(store));
   });
 }
 
-class MyApp extends StatelessWidget {
+class App extends StatelessWidget {
+
+  final Store<int> store;
+
+  App({Key key, this.store}) : super(key: key);
   // This widget is the root of your application.
   // Create your store as a final variable in a base Widget. This works better
   // with Hot Reload than creating it directly in the `build` function.

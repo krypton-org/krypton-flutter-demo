@@ -60,6 +60,11 @@ dependencies:
 
   # Material Dialog
   material_dialog: ^0.0.9
+
+  # State management
+  redux: ^4.0.0
+  redux_thunk: ^0.3.0
+  flutter_redux: ^0.6.0
   
   krypton:
     path: ../krypton-flutter
