@@ -1,20 +1,6 @@
+import 'package:boilerplate/redux/actions/todo_action.dart';
 import 'package:boilerplate/redux/states/todo_state.dart';
 import 'package:redux/redux.dart';
-
-class TransactionStartAction {
-  TodoTransactionType transactionType;
-  TransactionStartAction(this.transactionType);
-}
-
-class TransactionFailAction {
-  String error;
-  TransactionFailAction(this.error);
-}
-
-class TransactionSucceedAction {
-  List<Todo> todos;
-  TransactionSucceedAction(this.todos);
-}
 
 final Reducer<TodoState> todoReducer = combineReducers<TodoState>([
   TypedReducer<TodoState, TransactionStartAction>(transactionStart),

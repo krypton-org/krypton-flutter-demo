@@ -1,9 +1,6 @@
+import 'package:boilerplate/redux/actions/theme_action.dart';
 import 'package:boilerplate/redux/states/theme_state.dart';
 import 'package:redux/redux.dart';
-
-class DarkThemeAction {}
-
-class BrightThemeAction {}
 
 final Reducer<ThemeState> themeReducer = combineReducers<ThemeState>([
   TypedReducer<ThemeState, DarkThemeAction>(enableDarkTheme),

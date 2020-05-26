@@ -1,10 +1,6 @@
+import 'package:boilerplate/redux/actions/notify_action.dart';
 import 'package:boilerplate/redux/states/notify_state.dart';
 import 'package:redux/redux.dart';
-
-class NotifyAction {
-  Notification notification;
-  NotifyAction(this.notification);
-}
 
 final Reducer<Notification> notifyReducer = combineReducers<Notification>([
   TypedReducer<Notification, NotifyAction>(notify),
