@@ -1,15 +1,18 @@
 import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
+import 'package:boilerplate/redux/actions/auth_actions.dart';
+import 'package:boilerplate/redux/actions/language_actions.dart';
+import 'package:boilerplate/redux/states/auth_state.dart';
+import 'package:boilerplate/redux/states/language_state.dart';
+import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/stores/auth/auth_store.dart';
-import 'package:boilerplate/stores/language/language_store.dart';
-import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:material_dialog/material_dialog.dart';
-import 'package:provider/provider.dart';
+import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -18,21 +21,9 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  LanguageStore _languageStore;
-  ThemeStore _themeStore;
-  AuthStore _authStore;
-
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _languageStore = Provider.of<LanguageStore>(context);
-    _themeStore = Provider.of<ThemeStore>(context);
-    _authStore = Provider.of<AuthStore>(context);
   }
 
   @override
@@ -195,22 +186,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ListTile(
         dense: true,
         leading: Icon(Icons.power_settings_new),
-        title: FlatButton(
-            onPressed: () async {
-              var preference = await SharedPreferences.getInstance();
-              preference.setBool(Preferences.is_logged_in, false);
-              await _authStore.logout();
-              Navigator.of(context).pushReplacementNamed(Routes.login);
+        title: StoreConnector<AppState, _LogoutTileModel>(
+            converter: (store) {
+              return _LogoutTileModel(
+                  auth: store.state.auth,
+                  logout: () => store.dispatch(logOut()));
             },
-            child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  AppLocalizations.of(context).translate('settings_logout'),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                  style: Theme.of(context).textTheme.title,
-                ))),
+            onWillChange: (previousViewModel, newViewModel) => {
+                  if (previousViewModel.auth.transactionType ==
+                          AuthTransactionType.LOGOUT &&
+                      previousViewModel.auth.isSuccess == false &&
+                      newViewModel.auth.isSuccess == true)
+                    {Navigator.of(context).pushReplacementNamed(Routes.login)}
+                },
+            builder: (context, model) => FlatButton(
+                onPressed: () async {
+                  model.logout();
+                },
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      AppLocalizations.of(context).translate('settings_logout'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      style: Theme.of(context).textTheme.title,
+                    )))),
       )
     ]);
   }
@@ -236,25 +237,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
         onCloseButtonClicked: () {
           Navigator.of(context).pop();
         },
-        children: _languageStore.supportedLanguages
+        children: supportedLanguages
             .map(
-              (object) => ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.all(0.0),
-                title: Text(
-                  object.language,
-                  style: TextStyle(
-                    color: _languageStore.locale == object.locale
-                        ? Theme.of(context).primaryColor
-                        : _themeStore.darkMode ? Colors.white : Colors.black,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  // change user language based on selected locale
-                  _languageStore.changeLanguage(object.locale);
-                },
-              ),
+              (object) => StoreConnector<AppState, Store<AppState>>(
+                  converter: (store) => store,
+                  builder: (context, store) => ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.all(0.0),
+                        title: Text(
+                          object.language,
+                          style: TextStyle(
+                            color: store.state.language.locale == object.locale
+                                ? Theme.of(context).primaryColor
+                                : store.state.theme.isDark
+                                    ? Colors.white
+                                    : Colors.black,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          // change user language based on selected locale
+                          store.dispatch(
+                              new ChangeLanguageAction(object.locale));
+                        },
+                      )),
             )
             .toList(),
       ),
@@ -284,4 +290,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return SizedBox.shrink();
   }
+}
+
+class _LogoutTileModel {
+  final AuthState auth;
+  final VoidCallback logout;
+  _LogoutTileModel({this.auth, this.logout});
 }

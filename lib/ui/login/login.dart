@@ -1,4 +1,7 @@
 import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
+import 'package:boilerplate/redux/actions/auth_actions.dart';
+import 'package:boilerplate/redux/states/auth_state.dart';
+import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/auth/auth_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
@@ -11,9 +14,11 @@ import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:material_dialog/material_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:validators/validators.dart';
 
 import '../../stores/theme/theme_store.dart';
 
@@ -27,10 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _userEmailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  //stores:---------------------------------------------------------------------
-  ThemeStore _themeStore;
-  AuthStore _authStore;
-  
   //focus node:-----------------------------------------------------------------
   FocusNode _passwordFocusNode;
 
@@ -47,8 +48,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _authStore = Provider.of<AuthStore>(context);
-    _themeStore = Provider.of<ThemeStore>(context);
   }
 
   @override
@@ -79,20 +78,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 )
               : Center(child: _buildRightSide()),
-          Observer(
-            builder: (context) {
-              return _authStore.success
-                  ? navigateToHome(context)
-                  : _showErrorMessage(_authStore.errorStore.errorMessage);
-            },
-          ),
-          Observer(
-            builder: (context) {
-              return Visibility(
-                visible: _authStore.loading,
-                child: CustomProgressIndicatorWidget(),
-              );
-            },
+          StoreConnector<AppState, bool>(
+            converter: (store) => store.state.auth.isLoading,
+            builder: (context, isLoading) => Visibility(
+              visible: isLoading,
+              child: CustomProgressIndicatorWidget(),
+            ),
           )
         ],
       ),
@@ -137,45 +128,64 @@ class _LoginScreenState extends State<LoginScreen> {
     return Observer(
       builder: (context) {
         return Container(
-            child: TextFieldWidget(
-                hint: AppLocalizations.of(context).translate('login_email'),
-                inputType: TextInputType.emailAddress,
-                icon: Icons.person,
-                iconColor:
-                    _themeStore.darkMode ? Colors.white70 : Colors.black54,
-                textController: _userEmailController,
-                inputAction: TextInputAction.next,
-                onChanged: (value) {
-                  _authStore.setUserEmail(_userEmailController.text);
-                },
-                onFieldSubmitted: (value) {
-                  FocusScope.of(context).requestFocus(_passwordFocusNode);
-                },
-                errorText: _authStore.formErrorStore.userEmail),
+            child: StoreConnector<AppState, bool>(
+                converter: (store) => store.state.theme.isDark,
+                builder: (context, isDark) => TextFieldWidget(
+                      hint:
+                          AppLocalizations.of(context).translate('login_email'),
+                      inputType: TextInputType.emailAddress,
+                      icon: Icons.person,
+                      iconColor: isDark ? Colors.white70 : Colors.black54,
+                      textController: _userEmailController,
+                      inputAction: TextInputAction.next,
+                      onFieldSubmitted: (value) {
+                        FocusScope.of(context).requestFocus(_passwordFocusNode);
+                      },
+                      errorText: _validateEmail(_userEmailController.text),
+                    )),
             margin: const EdgeInsets.only(bottom: 0.0));
       },
     );
   }
 
+  String _validateEmail(String email) {
+    if (email.isEmpty) {
+      return "Email can't be empty";
+    } else if (!isEmail(email)) {
+      return 'Please enter a valid email address';
+    } else {
+      return "";
+    }
+  }
+
   Widget _buildPasswordField() {
     return Observer(
       builder: (context) {
-        return TextFieldWidget(
-          hint:
-              AppLocalizations.of(context).translate('login_et_user_password'),
-          isObscure: true,
-          padding: EdgeInsets.only(top: 16.0),
-          icon: Icons.lock,
-          iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
-          textController: _passwordController,
-          focusNode: _passwordFocusNode,
-          errorText: _authStore.formErrorStore.password,
-          onChanged: (value) {
-            _authStore.setPassword(_passwordController.text);
-          },
-        );
+        return StoreConnector<AppState, bool>(
+            converter: (store) => store.state.theme.isDark,
+            builder: (context, isDark) => TextFieldWidget(
+                  hint: AppLocalizations.of(context)
+                      .translate('login_et_user_password'),
+                  isObscure: true,
+                  padding: EdgeInsets.only(top: 16.0),
+                  icon: Icons.lock,
+                  iconColor: isDark ? Colors.white70 : Colors.black54,
+                  textController: _passwordController,
+                  focusNode: _passwordFocusNode,
+                  errorText: _validatePassword(_passwordController.text),
+                ));
       },
     );
+  }
+
+  String _validatePassword(String password) {
+    if (password.isEmpty) {
+      return "Password can't be empty";
+    } else if (password.length < 8) {
+      return "Password must be at-least 8 characters long";
+    } else {
+      return "";
+    }
   }
 
   Widget _buildForgotPasswordButton() {
@@ -217,19 +227,39 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildLogInButton() {
-    return CupertinoButton(
-      child: Text(AppLocalizations.of(context).translate('login_btn_log_in'),
-          style: new TextStyle(color: Colors.white)),
-      color: Theme.of(context).buttonColor,
-      onPressed: () async {
-        if (_authStore.canLogin) {
-          DeviceUtils.hideKeyboard(context);
-          _authStore.login();
-        } else {
-          _showErrorMessage('Please fill in all fields');
-        }
-      },
-    );
+    return StoreConnector<AppState, _LoginModel>(
+        converter: (store) => _LoginModel(
+            state: store.state,
+            login: (String email, String password) =>
+                store.dispatch(login(email, password))),
+        onWillChange: (previousViewModel, newViewModel) => {
+              if (previousViewModel.state.auth.transactionType ==
+                      AuthTransactionType.LOGIN &&
+                  previousViewModel.state.auth.isLoading == true &&
+                  newViewModel.state.auth.isSuccess == true)
+                {navigateToHome(context)}
+              else if (previousViewModel.state.auth.transactionType ==
+                      AuthTransactionType.LOGIN &&
+                  previousViewModel.state.auth.isLoading == true &&
+                  newViewModel.state.auth.isSuccess == false)
+                {_showErrorMessage(newViewModel.state.auth.error)}
+            },
+        builder: (context, model) => CupertinoButton(
+              child: Text(
+                  AppLocalizations.of(context).translate('login_btn_log_in'),
+                  style: new TextStyle(color: Colors.white)),
+              color: Theme.of(context).buttonColor,
+              onPressed: () async {
+                if (isEmail(_userEmailController.text) &&
+                    _passwordController.text.length > 8) {
+                  DeviceUtils.hideKeyboard(context);
+                  model.login(
+                      _userEmailController.text, _passwordController.text);
+                } else {
+                  _showErrorMessage('Please fill in all fields');
+                }
+              },
+            ));
   }
 
   Widget _buildSendEmailButton() {
@@ -237,7 +267,8 @@ class _LoginScreenState extends State<LoginScreen> {
       margin: const EdgeInsets.only(top: 25.0),
       child: CupertinoButton(
         child: new Text(
-            AppLocalizations.of(context).translate('login_btn_send_password_recovery_email'),
+            AppLocalizations.of(context)
+                .translate('login_btn_send_password_recovery_email'),
             style: new TextStyle(color: Colors.white)),
         color: Theme.of(context).buttonColor,
         onPressed: () async {
@@ -332,4 +363,10 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordFocusNode.dispose();
     super.dispose();
   }
+}
+
+class _LoginModel {
+  final AppState state;
+  final Function(String, String) login;
+  _LoginModel({this.state, this.login});
 }

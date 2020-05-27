@@ -15,8 +15,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   //stores:---------------------------------------------------------------------
-  PostStore _postStore;
-  ThemeStore _themeStore;
+  // PostStore _postStore;
+  // ThemeStore _themeStore;
 
   @override
   void initState() {
@@ -28,13 +28,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.didChangeDependencies();
 
     // initializing stores
-    _themeStore = Provider.of<ThemeStore>(context);
-    _postStore = Provider.of<PostStore>(context);
+    // _themeStore = Provider.of<ThemeStore>(context);
+    // _postStore = Provider.of<PostStore>(context);
 
-    // check to see if already called api
-    if (!_postStore.loading) {
-      _postStore.getPosts();
-    }
+    // // check to see if already called api
+    // if (!_postStore.loading) {
+    //   _postStore.getPosts();
+    // }
   }
 
   @override
@@ -82,78 +82,78 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildMainContent() {
-    return Observer(
-      builder: (context) {
-        return _postStore.loading
-            ? CustomProgressIndicatorWidget()
-            : Material(child: _buildListView());
-      },
-    );
+    // return Observer(
+    //   builder: (context) {
+    //     return _postStore.loading
+    //         ? CustomProgressIndicatorWidget()
+    //         : Material(child: _buildListView());
+    //   },
+    // );
   }
 
   Widget _buildListView() {
-    return _postStore.postList != null
-        ? ListView.separated(
-            itemCount: _postStore.postList.posts.length,
-            separatorBuilder: (context, position) {
-              return Divider();
-            },
-            itemBuilder: (context, position) {
-              return _buildListItem(position);
-            },
-          )
-        : Center(
-            child: Text(
-              AppLocalizations.of(context).translate('home_tv_no_post_found'),
-            ),
-          );
+    // return _postStore.postList != null
+    //     ? ListView.separated(
+    //         itemCount: _postStore.postList.posts.length,
+    //         separatorBuilder: (context, position) {
+    //           return Divider();
+    //         },
+    //         itemBuilder: (context, position) {
+    //           return _buildListItem(position);
+    //         },
+    //       )
+    //     : Center(
+    //         child: Text(
+    //           AppLocalizations.of(context).translate('home_tv_no_post_found'),
+    //         ),
+    //       );
   }
 
   Widget _buildListItem(int position) {
-    return ListTile(
-      dense: true,
-      leading: Icon(Icons.cloud_circle),
-      title: Text(
-        '${_postStore.postList.posts[position].title}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-        style: Theme.of(context).textTheme.title,
-      ),
-      subtitle: Text(
-        '${_postStore.postList.posts[position].body}',
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        softWrap: false,
-      ),
-    );
+    // return ListTile(
+    //   dense: true,
+    //   leading: Icon(Icons.cloud_circle),
+    //   title: Text(
+    //     '${_postStore.postList.posts[position].title}',
+    //     maxLines: 1,
+    //     overflow: TextOverflow.ellipsis,
+    //     softWrap: false,
+    //     style: Theme.of(context).textTheme.title,
+    //   ),
+    //   subtitle: Text(
+    //     '${_postStore.postList.posts[position].body}',
+    //     maxLines: 1,
+    //     overflow: TextOverflow.ellipsis,
+    //     softWrap: false,
+    //   ),
+    // );
   }
 
   Widget _handleErrorMessage() {
-    return Observer(
-      builder: (context) {
-        if (_postStore.errorStore.errorMessage.isNotEmpty) {
-          return _showErrorMessage(_postStore.errorStore.errorMessage);
-        }
+    // return Observer(
+    //   builder: (context) {
+    //     if (_postStore.errorStore.errorMessage.isNotEmpty) {
+    //       return _showErrorMessage(_postStore.errorStore.errorMessage);
+    //     }
 
-        return SizedBox.shrink();
-      },
-    );
+    //     return SizedBox.shrink();
+    //   },
+    // );
   }
 
   // General Methods:-----------------------------------------------------------
   _showErrorMessage(String message) {
-    Future.delayed(Duration(milliseconds: 0), () {
-      if (message != null && message.isNotEmpty) {
-        FlushbarHelper.createError(
-          message: message,
-          title: AppLocalizations.of(context).translate('home_tv_error'),
-          duration: Duration(seconds: 3),
-        )..show(context);
-      }
-    });
+    // Future.delayed(Duration(milliseconds: 0), () {
+    //   if (message != null && message.isNotEmpty) {
+    //     FlushbarHelper.createError(
+    //       message: message,
+    //       title: AppLocalizations.of(context).translate('home_tv_error'),
+    //       duration: Duration(seconds: 3),
+    //     )..show(context);
+    //   }
+    // });
 
-    return SizedBox.shrink();
+    // return SizedBox.shrink();
   }
 
 }
