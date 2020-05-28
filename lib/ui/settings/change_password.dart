@@ -27,7 +27,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   TextEditingController _passwordController = TextEditingController();
 
   //stores:---------------------------------------------------------------------
-  ThemeStore _themeStore;
 
   //focus node:-----------------------------------------------------------------
   FocusNode _passwordFocusNode;
@@ -36,20 +35,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _formKey = GlobalKey<FormState>();
 
   //stores:---------------------------------------------------------------------
-  final _store = AuthStore();
 
   @override
   void initState() {
     super.initState();
-
     _passwordFocusNode = FocusNode();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    _themeStore = Provider.of<ThemeStore>(context);
   }
 
   @override

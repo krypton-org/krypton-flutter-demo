@@ -26,9 +26,6 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
   TextEditingController _userEmailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  //stores:---------------------------------------------------------------------
-  ThemeStore _themeStore;
-
   //focus node:-----------------------------------------------------------------
   FocusNode _passwordFocusNode;
 
@@ -36,7 +33,6 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
   final _formKey = GlobalKey<FormState>();
 
   //stores:---------------------------------------------------------------------
-  final _store = AuthStore();
 
   @override
   void initState() {
@@ -48,8 +44,6 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    _themeStore = Provider.of<ThemeStore>(context);
   }
 
   @override

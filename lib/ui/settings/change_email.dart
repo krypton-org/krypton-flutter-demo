@@ -22,8 +22,6 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
   TextEditingController _emailController;
 
   //stores:---------------------------------------------------------------------
-  ThemeStore _themeStore;
-  AuthStore _authStore;
 
   //form key:-------------------------------------------------------------------
   final _formKey = GlobalKey<FormState>();
@@ -31,10 +29,7 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _authStore = Provider.of<AuthStore>(context);
-    _themeStore = Provider.of<ThemeStore>(context);
     _emailController = TextEditingController()..text = "toto@toto.com";
-    _authStore.setUserEmail(_emailController.text);
   }
 
   @override
@@ -59,12 +54,12 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
       builder: (context) {
         return IconButton(
           onPressed: () async {
-            if (_authStore.canUpdateEmail) {
-              DeviceUtils.hideKeyboard(context);
-              _authStore.updateEmail();
-            } else {
-              _showErrorMessage('Please fill in all fields');
-            }
+            // if (_authStore.canUpdateEmail) {
+            //   DeviceUtils.hideKeyboard(context);
+            //   _authStore.updateEmail();
+            // } else {
+            //   _showErrorMessage('Please fill in all fields');
+            // }
           },
           icon: Icon(
             Icons.check,
@@ -95,45 +90,45 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
         child: Stack(
       children: <Widget>[
         Center(child: _buildEmailForm()),
-        Observer(
-          builder: (context) {
-            return _authStore.success
-                ? navigateToSettings(context)
-                : _showErrorMessage(_authStore.errorStore.errorMessage);
-          },
-        ),
-        Observer(
-          builder: (context) {
-            return Visibility(
-              visible: _authStore.loading,
-              child: CustomProgressIndicatorWidget(),
-            );
-          },
-        )
+        // Observer(
+        //   builder: (context) {
+        //     return _authStore.success
+        //         ? navigateToSettings(context)
+        //         : _showErrorMessage(_authStore.errorStore.errorMessage);
+        //   },
+        // ),
+        // Observer(
+        //   builder: (context) {
+        //     return Visibility(
+        //       visible: _authStore.loading,
+        //       child: CustomProgressIndicatorWidget(),
+        //     );
+        //   },
+        // )
       ],
     ));
   }
 
   _buildEmailForm() {
-    return Observer(
-      builder: (context) {
-        return Column(children: <Widget>[ Container(
-          padding: new EdgeInsets.all(10.0),
-          child: TextFieldWidget(
-                hint: AppLocalizations.of(context).translate('login_email'),
-                inputType: TextInputType.emailAddress,
-                icon: Icons.person,
-                iconColor:
-                    _themeStore.darkMode ? Colors.white70 : Colors.black54,
-                textController: _emailController,
-                inputAction: TextInputAction.next,
-                onChanged: (value) {
-                  _authStore.setUserEmail(_emailController.text);
-                },
-                errorText: _authStore.formErrorStore.userEmail),
-        )]);
-      },
-    );
+    // return Observer(
+    //   builder: (context) {
+    //     return Column(children: <Widget>[ Container(
+    //       padding: new EdgeInsets.all(10.0),
+    //       child: TextFieldWidget(
+    //             hint: AppLocalizations.of(context).translate('login_email'),
+    //             inputType: TextInputType.emailAddress,
+    //             icon: Icons.person,
+    //             iconColor:
+    //                 _themeStore.darkMode ? Colors.white70 : Colors.black54,
+    //             textController: _emailController,
+    //             inputAction: TextInputAction.next,
+    //             onChanged: (value) {
+    //               _authStore.setUserEmail(_emailController.text);
+    //             },
+    //             errorText: _authStore.formErrorStore.userEmail),
+    //     )]);
+    //   },
+    // );
   }
 
   // General Methods:-----------------------------------------------------------

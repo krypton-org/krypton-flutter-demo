@@ -1,4 +1,6 @@
 import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
+import 'package:boilerplate/redux/actions/theme_action.dart';
+import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/auth/auth_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
@@ -11,6 +13,7 @@ import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,13 +26,10 @@ class DarkModeScreen extends StatefulWidget {
 
 class _DarkModeScreenState extends State<DarkModeScreen> {
   //stores:---------------------------------------------------------------------
-  ThemeStore _themeStore;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    _themeStore = Provider.of<ThemeStore>(context);
   }
 
   @override
@@ -69,21 +69,46 @@ class _DarkModeScreenState extends State<DarkModeScreen> {
     return Material(
       child: Column(children: <Widget>[
         MergeSemantics(
-            child: ListTile(
-          title: Container(
-              padding: new EdgeInsets.only(top: 5.0, left: 10.0, bottom: 5.0),
-              child: Text(AppLocalizations.of(context).translate('settings_enable_dark_mode'), style: Theme.of(context).textTheme.title)),
-          trailing: CupertinoSwitch(
-            value: _themeStore.darkMode,
-            onChanged: (bool value) {
-              _themeStore.changeBrightnessToDark(value);
-            },
-          ),
-          onTap: () {
-            _themeStore.changeBrightnessToDark(!_themeStore.darkMode);
-          },
-        ))
+            child: StoreConnector<AppState, _SwitchDarkModeModel>(
+                converter: (store) => _SwitchDarkModeModel(
+                    isDark: store.state.theme.isDark,
+                    setBrightMode: () =>
+                        store.dispatch(new BrightThemeAction()),
+                    setDarkMode: () => store.dispatch(new DarkThemeAction())),
+                builder: (context, model) => ListTile(
+                      title: Container(
+                          padding: new EdgeInsets.only(
+                              top: 5.0, left: 10.0, bottom: 5.0),
+                          child: Text(
+                              AppLocalizations.of(context)
+                                  .translate('settings_enable_dark_mode'),
+                              style: Theme.of(context).textTheme.title)),
+                      trailing: CupertinoSwitch(
+                        value: model.isDark,
+                        onChanged: (bool value) {
+                          if (value) {
+                            model.setBrightMode();
+                          } else {
+                            model.setDarkMode();
+                          }
+                        },
+                      ),
+                      onTap: () {
+                        if (model.isDark) {
+                          model.setBrightMode();
+                        } else {
+                          model.setDarkMode();
+                        }
+                      },
+                    )))
       ]),
     );
   }
+}
+
+class _SwitchDarkModeModel {
+  final bool isDark;
+  final Function() setBrightMode;
+  final Function() setDarkMode;
+  _SwitchDarkModeModel({this.isDark, this.setBrightMode, this.setDarkMode});
 }
