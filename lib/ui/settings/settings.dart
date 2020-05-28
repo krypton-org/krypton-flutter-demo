@@ -1,4 +1,3 @@
-import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/redux/actions/auth_actions.dart';
 import 'package:boilerplate/redux/actions/language_actions.dart';
 import 'package:boilerplate/redux/states/auth_state.dart';
@@ -13,7 +12,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:material_dialog/material_dialog.dart';
 import 'package:redux/redux.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override

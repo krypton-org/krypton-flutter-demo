@@ -6,7 +6,6 @@ import 'package:boilerplate/data/network/apis/posts/post_api.dart';
 import 'package:boilerplate/data/repository.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/utils/encryption/xxtea.dart';
-import 'package:inject/inject.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
@@ -14,7 +13,6 @@ import 'package:sembast/sembast_io.dart';
 
 import 'netwok_module.dart';
 
-@module
 class LocalModule extends NetworkModule {
   // DI variables:--------------------------------------------------------------
   Future<Database> database;
@@ -30,9 +28,6 @@ class LocalModule extends NetworkModule {
   /// A singleton database provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
-  @asynchronous
   Future<Database> provideDatabase() async {
     // Key for encryption
     var encryptionKey = "";
@@ -63,8 +58,6 @@ class LocalModule extends NetworkModule {
   /// A singleton post dataSource provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
   PostDataSource providePostDataSource() => PostDataSource(database);
 
   // DataSources End:-----------------------------------------------------------
@@ -72,8 +65,6 @@ class LocalModule extends NetworkModule {
   /// A singleton repository provider.
   ///
   /// Calling it multiple times will return the same instance.
-  @provide
-  @singleton
   Repository provideRepository(
     PostApi postApi,
     SharedPreferenceHelper preferenceHelper,

@@ -1,10 +1,7 @@
-import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/redux/actions/auth_actions.dart';
 import 'package:boilerplate/redux/states/auth_state.dart';
 import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/stores/auth/auth_store.dart';
-import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/app_icon_widget.dart';
 import 'package:boilerplate/widgets/empty_app_bar_widget.dart';
@@ -237,10 +234,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget navigateToHome(BuildContext context) {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setBool(Preferences.is_logged_in, true);
-    });
-
     Future.delayed(Duration(milliseconds: 0), () {
       Navigator.of(context).pushNamedAndRemoveUntil(
           Routes.home, (Route<dynamic> route) => false);

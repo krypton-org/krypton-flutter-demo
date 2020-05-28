@@ -1,4 +1,3 @@
-import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/redux/actions/theme_action.dart';
 import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
@@ -87,9 +86,9 @@ class _DarkModeScreenState extends State<DarkModeScreen> {
                         value: model.isDark,
                         onChanged: (bool value) {
                           if (value) {
-                            model.setBrightMode();
-                          } else {
                             model.setDarkMode();
+                          } else {
+                            model.setBrightMode();
                           }
                         },
                       ),

@@ -1,4 +1,3 @@
-import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/redux/actions/auth_actions.dart';
 import 'package:boilerplate/redux/states/auth_state.dart';
 import 'package:boilerplate/redux/store.dart';
@@ -15,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:material_dialog/material_dialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validators/validators.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -280,10 +278,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget navigateToHome(BuildContext context) {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setBool(Preferences.is_logged_in, true);
-    });
-
     Future.delayed(Duration(milliseconds: 0), () {
       Navigator.of(context).pushNamedAndRemoveUntil(
           Routes.home, (Route<dynamic> route) => false);

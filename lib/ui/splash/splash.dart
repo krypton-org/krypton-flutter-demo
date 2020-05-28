@@ -1,42 +1,36 @@
 import 'dart:async';
-
-import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
+import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/widgets/app_icon_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SplashScreen extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _SplashScreenState();
-}
+const SPLASH_SCREEN_TIME = 5000;
 
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    startTimer();
-  }
-
+class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Center(child: AppIconWidget(image: 'assets/icons/ic_appicon.png')),
-    );
-  }
-
-  startTimer() {
-    var _duration = Duration(milliseconds: 5000);
-    return Timer(_duration, navigate);
-  }
-
-  navigate() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    if (preferences.getBool(Preferences.is_logged_in) ?? false) {
-      Navigator.of(context).pushReplacementNamed(Routes.home);
-    } else {
-      Navigator.of(context).pushReplacementNamed(Routes.login);
-    }
+    return StoreConnector<AppState, bool>(
+        converter: (store) => store.state.auth.isLoggedIn,
+        builder: (context, isLoggedIn) => Material(
+            child: Center(
+                child: AppIconWidget(image: 'assets/icons/ic_appicon.png'))),
+        onInitialBuild: (isLoggedIn) => {
+              Future.delayed(
+                  Duration(milliseconds: SPLASH_SCREEN_TIME),
+                  () => {
+                        if (isLoggedIn ?? false)
+                          {
+                            Navigator.of(context)
+                                .pushReplacementNamed(Routes.home)
+                          }
+                        else
+                          {
+                            Navigator.of(context)
+                                .pushReplacementNamed(Routes.login)
+                          }
+                      })
+            });
   }
 }

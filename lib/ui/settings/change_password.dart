@@ -1,4 +1,3 @@
-import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/stores/auth/auth_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';

@@ -59,11 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
   }
 
-
   Widget _buildSettingsButton() {
     return IconButton(
       onPressed: () {
-          Navigator.of(context).pushReplacementNamed(Routes.settings);
+        Navigator.of(context).pushReplacementNamed(Routes.settings);
       },
       icon: Icon(
         Icons.settings,
@@ -82,6 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildMainContent() {
+    return ListTile();
     // return Observer(
     //   builder: (context) {
     //     return _postStore.loading
@@ -130,6 +130,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _handleErrorMessage() {
+    return ListTile();
+
     // return Observer(
     //   builder: (context) {
     //     if (_postStore.errorStore.errorMessage.isNotEmpty) {
@@ -155,5 +157,4 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // return SizedBox.shrink();
   }
-
 }
