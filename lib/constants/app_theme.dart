@@ -33,7 +33,7 @@ final ThemeData themeData = new ThemeData(
     primaryColorBrightness: Brightness.light,
     accentColor: Colors.blue[400],
     accentColorBrightness: Brightness.light,
-    buttonColor: Colors.blue[400]
+    buttonColor: Colors.blue[400],
 );
 
 final ThemeData themeDataDark = ThemeData(

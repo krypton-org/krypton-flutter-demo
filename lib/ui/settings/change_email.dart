@@ -23,12 +23,6 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    //_emailController = TextEditingController()..text = "toto@toto.com";
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Form(
         key: _formKey,
@@ -109,10 +103,7 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
             builder: (context, state) => TextFormField(
                   initialValue: state.auth.user['email'],
                   decoration: InputDecoration(
-                    icon: Icon(Icons.email,
-                        color: state.theme.isDark
-                            ? Colors.white70
-                            : Colors.black54),
+                    icon: Icon(Icons.email),
                     hintText:
                         AppLocalizations.of(context).translate('login_email'),
                   ),

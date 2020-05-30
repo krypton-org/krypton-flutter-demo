@@ -29,11 +29,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool newPasswordVisible = false;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Form(
         key: _formKey,
@@ -53,14 +48,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Widget _buildHistoryBackButton() {
-        return IconButton(
-          onPressed: () {
-            Navigator.of(context).pushReplacementNamed(Routes.settings);
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-          ),
-        );
+    return IconButton(
+      onPressed: () {
+        Navigator.of(context).pushReplacementNamed(Routes.settings);
+      },
+      icon: Icon(
+        Icons.arrow_back_ios,
+      ),
+    );
   }
 
   // body methods:--------------------------------------------------------------
@@ -78,37 +73,31 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget _buildActualPasswordField() {
     return Container(
         padding: new EdgeInsets.all(10.0),
-        child: StoreConnector<AppState, bool>(
-            converter: (store) => store.state.theme.isDark,
-            builder: (context, isDark) => TextFormField(
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.lock,
-                        color: isDark ? Colors.white70 : Colors.black54),
-                    hintText: AppLocalizations.of(context)
-                        .translate('settings_actual_password'),
-                    contentPadding: EdgeInsets.only(top: 16.0),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        actualPasswordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: isDark ? Colors.white70 : Colors.black54,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          actualPasswordVisible = !actualPasswordVisible;
-                        });
-                      },
-                    ),
-                  ),
-                  controller: _actualPasswordController,
-                  onFieldSubmitted: (value) {
-                    FocusScope.of(context).requestFocus(_newPasswordFocusNode);
-                  },
-                  validator: _validatePassword,
-                  obscureText: !actualPasswordVisible,
-                  autocorrect: false,
-                )));
+        child: TextFormField(
+          decoration: InputDecoration(
+            icon: Icon(Icons.lock),
+            hintText: AppLocalizations.of(context)
+                .translate('settings_actual_password'),
+            contentPadding: EdgeInsets.only(top: 16.0),
+            suffixIcon: IconButton(
+              icon: Icon(
+                actualPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              ),
+              onPressed: () {
+                setState(() {
+                  actualPasswordVisible = !actualPasswordVisible;
+                });
+              },
+            ),
+          ),
+          controller: _actualPasswordController,
+          onFieldSubmitted: (value) {
+            FocusScope.of(context).requestFocus(_newPasswordFocusNode);
+          },
+          validator: _validatePassword,
+          obscureText: !actualPasswordVisible,
+          autocorrect: false,
+        ));
   }
 
   String _validatePassword(String password) {
@@ -123,35 +112,29 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget _buildNewPasswordField() {
     return Container(
         padding: new EdgeInsets.all(10.0),
-        child: StoreConnector<AppState, bool>(
-            converter: (store) => store.state.theme.isDark,
-            builder: (context, isDark) => TextFormField(
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.lock,
-                        color: isDark ? Colors.white70 : Colors.black54),
-                    hintText: AppLocalizations.of(context)
-                        .translate('settings_new_password'),
-                    contentPadding: EdgeInsets.only(top: 16.0),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        newPasswordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: isDark ? Colors.white70 : Colors.black54,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          newPasswordVisible = !newPasswordVisible;
-                        });
-                      },
-                    ),
-                  ),
-                  controller: _newPasswordController,
-                  focusNode: _newPasswordFocusNode,
-                  validator: _validatePassword,
-                  obscureText: !newPasswordVisible,
-                  autocorrect: false,
-                )));
+        child: TextFormField(
+          decoration: InputDecoration(
+            icon: Icon(Icons.lock),
+            hintText:
+                AppLocalizations.of(context).translate('settings_new_password'),
+            contentPadding: EdgeInsets.only(top: 16.0),
+            suffixIcon: IconButton(
+              icon: Icon(
+                newPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              ),
+              onPressed: () {
+                setState(() {
+                  newPasswordVisible = !newPasswordVisible;
+                });
+              },
+            ),
+          ),
+          controller: _newPasswordController,
+          focusNode: _newPasswordFocusNode,
+          validator: _validatePassword,
+          obscureText: !newPasswordVisible,
+          autocorrect: false,
+        ));
   }
 
   Widget _buildValidateButton() {

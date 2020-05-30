@@ -13,13 +13,6 @@ class DarkModeScreen extends StatefulWidget {
 }
 
 class _DarkModeScreenState extends State<DarkModeScreen> {
-  //stores:---------------------------------------------------------------------
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
