@@ -1,8 +1,5 @@
 import 'package:boilerplate/constants/app_theme.dart';
 import 'package:boilerplate/constants/strings.dart';
-import 'package:boilerplate/di/modules/local_module.dart';
-import 'package:boilerplate/di/modules/netwok_module.dart';
-import 'package:boilerplate/di/modules/preference_module.dart';
 import 'package:boilerplate/redux/states/language_state.dart';
 import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';

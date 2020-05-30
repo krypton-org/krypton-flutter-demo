@@ -29,6 +29,9 @@
   "settings_dark_mode": "Dark Mode",
   "settings_enable_dark_mode": "Enable Dark Mode",
   "settings_logout": "Log out",
-  "settings_language": "Choose Language"
+  "settings_language": "Choose Language",
+  "settings_actual_password": "Actual Password",
+  "settings_new_password": "New Password"
+
 
 }

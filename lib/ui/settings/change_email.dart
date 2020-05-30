@@ -1,9 +1,14 @@
+import 'package:boilerplate/redux/actions/auth_actions.dart';
+import 'package:boilerplate/redux/states/auth_state.dart';
+import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
+import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:validators/validators.dart';
 
 class ChangeEmailScreen extends StatefulWidget {
   @override
@@ -14,23 +19,23 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
   //text controllers:-----------------------------------------------------------
   TextEditingController _emailController;
 
-  //stores:---------------------------------------------------------------------
-
   //form key:-------------------------------------------------------------------
   final _formKey = GlobalKey<FormState>();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _emailController = TextEditingController()..text = "toto@toto.com";
+    //_emailController = TextEditingController()..text = "toto@toto.com";
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildBody(),
-    );
+    return Form(
+        key: _formKey,
+        child: Scaffold(
+          appBar: _buildAppBar(),
+          body: _buildBody(),
+        ));
   }
 
   // app bar methods:-----------------------------------------------------------
@@ -43,37 +48,45 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
   }
 
   Widget _buildValidateButton() {
-    return Observer(
-      builder: (context) {
-        return IconButton(
-          onPressed: () async {
-            // if (_authStore.canUpdateEmail) {
-            //   DeviceUtils.hideKeyboard(context);
-            //   _authStore.updateEmail();
-            // } else {
-            //   _showErrorMessage('Please fill in all fields');
-            // }
-          },
-          icon: Icon(
-            Icons.check,
-          ),
-        );
-      },
-    );
+    return StoreConnector<AppState, _ChangeEmailModel>(
+        converter: (store) => _ChangeEmailModel(
+            state: store.state,
+            updateEmail: (String email) => store.dispatch(updateEmail(email))),
+        onWillChange: (previousViewModel, newViewModel) => {
+              if (previousViewModel.state.auth.transactionType ==
+                      AuthTransactionType.UPDATE_EMAIL &&
+                  previousViewModel.state.auth.isLoading == true &&
+                  newViewModel.state.auth.isSuccess == true)
+                {navigateToSettings(context)}
+              else if (previousViewModel.state.auth.transactionType ==
+                      AuthTransactionType.UPDATE_EMAIL &&
+                  previousViewModel.state.auth.isLoading == true &&
+                  newViewModel.state.auth.isSuccess == false)
+                {_showErrorMessage(newViewModel.state.auth.error)}
+            },
+        builder: (context, model) => IconButton(
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  DeviceUtils.hideKeyboard(context);
+                  model.updateEmail(_emailController.text);
+                } else {
+                  _showErrorMessage('Please fill in all fields');
+                }
+              },
+              icon: Icon(
+                Icons.check,
+              ),
+            ));
   }
 
   Widget _buildHistoryBackButton() {
-    return Observer(
-      builder: (context) {
-        return IconButton(
-          onPressed: () {
-            Navigator.of(context).pushReplacementNamed(Routes.settings);
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-          ),
-        );
+    return IconButton(
+      onPressed: () {
+        Navigator.of(context).pushReplacementNamed(Routes.settings);
       },
+      icon: Icon(
+        Icons.arrow_back_ios,
+      ),
     );
   }
 
@@ -82,46 +95,43 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
     return Material(
         child: Stack(
       children: <Widget>[
-        Center(child: _buildEmailForm()),
-        // Observer(
-        //   builder: (context) {
-        //     return _authStore.success
-        //         ? navigateToSettings(context)
-        //         : _showErrorMessage(_authStore.errorStore.errorMessage);
-        //   },
-        // ),
-        // Observer(
-        //   builder: (context) {
-        //     return Visibility(
-        //       visible: _authStore.loading,
-        //       child: CustomProgressIndicatorWidget(),
-        //     );
-        //   },
-        // )
+        Center(child: _buildEmailField()),
       ],
     ));
   }
 
-  _buildEmailForm() {
-    // return Observer(
-    //   builder: (context) {
-    //     return Column(children: <Widget>[ Container(
-    //       padding: new EdgeInsets.all(10.0),
-    //       child: TextFieldWidget(
-    //             hint: AppLocalizations.of(context).translate('login_email'),
-    //             inputType: TextInputType.emailAddress,
-    //             icon: Icons.person,
-    //             iconColor:
-    //                 _themeStore.darkMode ? Colors.white70 : Colors.black54,
-    //             textController: _emailController,
-    //             inputAction: TextInputAction.next,
-    //             onChanged: (value) {
-    //               _authStore.setUserEmail(_emailController.text);
-    //             },
-    //             errorText: _authStore.formErrorStore.userEmail),
-    //     )]);
-    //   },
-    // );
+  Widget _buildEmailField() {
+    return Column(children: <Widget>[
+      Container(
+        padding: new EdgeInsets.all(10.0),
+        child: StoreConnector<AppState, AppState>(
+            converter: (store) => store.state,
+            builder: (context, state) => TextFormField(
+                  initialValue: state.auth.user['email'],
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.email,
+                        color: state.theme.isDark
+                            ? Colors.white70
+                            : Colors.black54),
+                    hintText:
+                        AppLocalizations.of(context).translate('login_email'),
+                  ),
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  autocorrect: false,
+                  validator: _validateEmail,
+                )),
+      )
+    ]);
+  }
+
+  String _validateEmail(String email) {
+    if (email.isEmpty) {
+      return "Email can't be empty";
+    } else if (!isEmail(email)) {
+      return 'Please enter a valid email address';
+    }
+    return null;
   }
 
   // General Methods:-----------------------------------------------------------
@@ -153,4 +163,10 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
     _emailController.dispose();
     super.dispose();
   }
+}
+
+class _ChangeEmailModel {
+  final AppState state;
+  final Function(String) updateEmail;
+  _ChangeEmailModel({this.state, this.updateEmail});
 }

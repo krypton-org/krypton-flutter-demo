@@ -2,6 +2,7 @@ import 'package:boilerplate/redux/actions/auth_actions.dart';
 import 'package:boilerplate/redux/states/auth_state.dart';
 import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
+import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/app_icon_widget.dart';
 import 'package:boilerplate/widgets/empty_app_bar_widget.dart';
@@ -116,9 +117,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return "Email can't be empty";
     } else if (!isEmail(email)) {
       return 'Please enter a valid email address';
-    } else {
-      return "";
     }
+    return null;
   }
 
   Widget _buildPasswordField() {
@@ -133,12 +133,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 contentPadding: EdgeInsets.only(top: 16.0),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    // Based on passwordVisible state choose the icon
                     passwordVisible ? Icons.visibility : Icons.visibility_off,
                     color: isDark ? Colors.white70 : Colors.black54,
                   ),
                   onPressed: () {
-                    // Update the state i.e. toogle the state of passwordVisible variable
                     setState(() {
                       passwordVisible = !passwordVisible;
                     });
@@ -148,11 +146,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               controller: _passwordController,
               focusNode: _passwordFocusNode,
               validator: _validatePassword,
-              obscureText: passwordVisible,
+              obscureText: !passwordVisible,
               autocorrect: false,
-              // onChanged: (_) {
-              //   _formKey.currentState.validate();
-              // },
             ));
   }
 
@@ -161,9 +156,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return "Password can't be empty";
     } else if (password.length < 8) {
       return "Password must be at-least 8 characters long";
-    } else {
-      return "";
     }
+    return null;
   }
 
   Widget _buildLogInButton() {
@@ -220,10 +214,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       style: new TextStyle(color: Colors.white)),
                   color: Theme.of(context).buttonColor,
                   onPressed: () async {
-                    await model.register(
-                        _emailController.text, _passwordController.text);
-                    await model.login(
-                        _emailController.text, _passwordController.text);
+                    if (_formKey.currentState.validate()) {
+                      DeviceUtils.hideKeyboard(context);
+                      await model.register(
+                          _emailController.text, _passwordController.text);
+                      await model.login(
+                          _emailController.text, _passwordController.text);
+                    } else {
+                      _showErrorMessage('Please fill in all fields');
+                    }
                   },
                 )));
   }

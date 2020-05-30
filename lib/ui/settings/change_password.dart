@@ -1,9 +1,13 @@
+import 'package:boilerplate/redux/actions/auth_actions.dart';
+import 'package:boilerplate/redux/states/auth_state.dart';
+import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
+import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   @override
@@ -12,24 +16,17 @@ class ChangePasswordScreen extends StatefulWidget {
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   //text controllers:-----------------------------------------------------------
-  TextEditingController _userEmailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-
-  //stores:---------------------------------------------------------------------
+  TextEditingController _actualPasswordController = TextEditingController();
+  TextEditingController _newPasswordController = TextEditingController();
 
   //focus node:-----------------------------------------------------------------
-  FocusNode _passwordFocusNode;
+  FocusNode _newPasswordFocusNode = FocusNode();
 
   //form key:-------------------------------------------------------------------
   final _formKey = GlobalKey<FormState>();
 
-  //stores:---------------------------------------------------------------------
-
-  @override
-  void initState() {
-    super.initState();
-    _passwordFocusNode = FocusNode();
-  }
+  bool actualPasswordVisible = false;
+  bool newPasswordVisible = false;
 
   @override
   void didChangeDependencies() {
@@ -38,24 +35,24 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildBody(),
-    );
+    return Form(
+        key: _formKey,
+        child: Scaffold(
+          appBar: _buildAppBar(),
+          body: _buildBody(),
+        ));
   }
 
   // app bar methods:-----------------------------------------------------------
   Widget _buildAppBar() {
     return AppBar(
-      leading: _buildHistoryBackButton(),
-      title: Text(
-          AppLocalizations.of(context).translate('settings_change_password')),
-    );
+        leading: _buildHistoryBackButton(),
+        title: Text(
+            AppLocalizations.of(context).translate('settings_change_password')),
+        actions: <Widget>[_buildValidateButton()]);
   }
 
   Widget _buildHistoryBackButton() {
-    return Observer(
-      builder: (context) {
         return IconButton(
           onPressed: () {
             Navigator.of(context).pushReplacementNamed(Routes.settings);
@@ -64,17 +61,138 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             Icons.arrow_back_ios,
           ),
         );
-      },
-    );
   }
 
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {
     return Material(
       child: Column(
-        children: <Widget>[],
+        children: <Widget>[
+          Center(child: _buildActualPasswordField()),
+          Center(child: _buildNewPasswordField())
+        ],
       ),
     );
+  }
+
+  Widget _buildActualPasswordField() {
+    return Container(
+        padding: new EdgeInsets.all(10.0),
+        child: StoreConnector<AppState, bool>(
+            converter: (store) => store.state.theme.isDark,
+            builder: (context, isDark) => TextFormField(
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.lock,
+                        color: isDark ? Colors.white70 : Colors.black54),
+                    hintText: AppLocalizations.of(context)
+                        .translate('settings_actual_password'),
+                    contentPadding: EdgeInsets.only(top: 16.0),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        actualPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: isDark ? Colors.white70 : Colors.black54,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          actualPasswordVisible = !actualPasswordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                  controller: _actualPasswordController,
+                  onFieldSubmitted: (value) {
+                    FocusScope.of(context).requestFocus(_newPasswordFocusNode);
+                  },
+                  validator: _validatePassword,
+                  obscureText: !actualPasswordVisible,
+                  autocorrect: false,
+                )));
+  }
+
+  String _validatePassword(String password) {
+    if (password.isEmpty) {
+      return "Password can't be empty";
+    } else if (password.length < 8) {
+      return "Password must be at-least 8 characters long";
+    }
+    return null;
+  }
+
+  Widget _buildNewPasswordField() {
+    return Container(
+        padding: new EdgeInsets.all(10.0),
+        child: StoreConnector<AppState, bool>(
+            converter: (store) => store.state.theme.isDark,
+            builder: (context, isDark) => TextFormField(
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.lock,
+                        color: isDark ? Colors.white70 : Colors.black54),
+                    hintText: AppLocalizations.of(context)
+                        .translate('settings_new_password'),
+                    contentPadding: EdgeInsets.only(top: 16.0),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        newPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: isDark ? Colors.white70 : Colors.black54,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          newPasswordVisible = !newPasswordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                  controller: _newPasswordController,
+                  focusNode: _newPasswordFocusNode,
+                  validator: _validatePassword,
+                  obscureText: !newPasswordVisible,
+                  autocorrect: false,
+                )));
+  }
+
+  Widget _buildValidateButton() {
+    return StoreConnector<AppState, _ChangePasswordModel>(
+        converter: (store) => _ChangePasswordModel(
+            state: store.state,
+            changePassword: (String actualPassword, String newPassword) =>
+                store.dispatch(changePassword(actualPassword, newPassword))),
+        onWillChange: (previousViewModel, newViewModel) => {
+              if (previousViewModel.state.auth.transactionType ==
+                      AuthTransactionType.CHANGE_PASSWORD &&
+                  previousViewModel.state.auth.isLoading == true &&
+                  newViewModel.state.auth.isSuccess == true)
+                {navigateToSettings(context)}
+              else if (previousViewModel.state.auth.transactionType ==
+                      AuthTransactionType.CHANGE_PASSWORD &&
+                  previousViewModel.state.auth.isLoading == true &&
+                  newViewModel.state.auth.isSuccess == false)
+                {_showErrorMessage(newViewModel.state.auth.error)}
+            },
+        builder: (context, model) => IconButton(
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  DeviceUtils.hideKeyboard(context);
+                  model.changePassword(_actualPasswordController.text,
+                      _newPasswordController.text);
+                } else {
+                  _showErrorMessage('Please fill in all fields');
+                }
+              },
+              icon: Icon(
+                Icons.check,
+              ),
+            ));
+  }
+
+  Widget navigateToSettings(BuildContext context) {
+    Future.delayed(Duration(milliseconds: 0), () {
+      Navigator.of(context).pushReplacementNamed(Routes.settings);
+    });
+    return Container();
   }
 
   // General Methods:-----------------------------------------------------------
@@ -96,9 +214,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   void dispose() {
     // Clean up the controller when the Widget is removed from the Widget tree
-    _userEmailController.dispose();
-    _passwordController.dispose();
-    _passwordFocusNode.dispose();
+    _actualPasswordController.dispose();
+    _newPasswordController.dispose();
+    _newPasswordFocusNode.dispose();
     super.dispose();
   }
+}
+
+class _ChangePasswordModel {
+  final AppState state;
+  final Function(String, String) changePassword;
+  _ChangePasswordModel({this.state, this.changePassword});
 }

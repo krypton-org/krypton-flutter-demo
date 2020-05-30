@@ -142,12 +142,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 contentPadding: EdgeInsets.only(top: 16.0),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    // Based on passwordVisible state choose the icon
                     passwordVisible ? Icons.visibility : Icons.visibility_off,
                     color: isDark ? Colors.white70 : Colors.black54,
                   ),
                   onPressed: () {
-                    // Update the state i.e. toogle the state of passwordVisible variable
                     setState(() {
                       passwordVisible = !passwordVisible;
                     });
@@ -157,11 +155,8 @@ class _LoginScreenState extends State<LoginScreen> {
               controller: _passwordController,
               focusNode: _passwordFocusNode,
               validator: _validatePassword,
-              obscureText: passwordVisible,
+              obscureText: !passwordVisible,
               autocorrect: false,
-              // onChanged: (_) {
-              //   _formKey.currentState.validate();
-              // },
             ));
   }
 
