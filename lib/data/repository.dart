@@ -73,15 +73,15 @@ class Repository {
       .then((id) => id)
       .catchError((error) => throw error);
 
-  // Theme: --------------------------------------------------------------------
-  Future<void> changeBrightnessToDark(bool value) =>
-      _sharedPrefsHelper.changeBrightnessToDark(value);
+  // // Theme: --------------------------------------------------------------------
+  // Future<void> changeBrightnessToDark(bool value) =>
+  //     _sharedPrefsHelper.changeBrightnessToDark(value);
 
-  Future<bool> get isDarkMode => _sharedPrefsHelper.isDarkMode;
+  // Future<bool> get isDarkMode => _sharedPrefsHelper.isDarkMode;
 
-  // Language: -----------------------------------------------------------------
-  Future<void> changeLanguage(String value) =>
-      _sharedPrefsHelper.changeLanguage(value);
+  // // Language: -----------------------------------------------------------------
+  // Future<void> changeLanguage(String value) =>
+  //     _sharedPrefsHelper.changeLanguage(value);
 
-  Future<String> get currentLanguage => _sharedPrefsHelper.currentLanguage;
+  // Future<String> get currentLanguage => _sharedPrefsHelper.currentLanguage;
 }

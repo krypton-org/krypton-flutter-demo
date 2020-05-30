@@ -1,20 +1,11 @@
-import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
+import 'package:boilerplate/redux/actions/theme_action.dart';
+import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/stores/auth/auth_store.dart';
-import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
-import 'package:boilerplate/widgets/app_icon_widget.dart';
-import 'package:boilerplate/widgets/empty_app_bar_widget.dart';
-import 'package:boilerplate/widgets/progress_indicator_widget.dart';
-import 'package:boilerplate/widgets/textfield_widget.dart';
-import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../stores/theme/theme_store.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 class DarkModeScreen extends StatefulWidget {
   @override
@@ -22,36 +13,6 @@ class DarkModeScreen extends StatefulWidget {
 }
 
 class _DarkModeScreenState extends State<DarkModeScreen> {
-  //text controllers:-----------------------------------------------------------
-  TextEditingController _userEmailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-
-  //stores:---------------------------------------------------------------------
-  ThemeStore _themeStore;
-
-  //focus node:-----------------------------------------------------------------
-  FocusNode _passwordFocusNode;
-
-  //form key:-------------------------------------------------------------------
-  final _formKey = GlobalKey<FormState>();
-
-  //stores:---------------------------------------------------------------------
-  final _store = AuthStore();
-
-  @override
-  void initState() {
-    super.initState();
-
-    _passwordFocusNode = FocusNode();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    _themeStore = Provider.of<ThemeStore>(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,39 +43,53 @@ class _DarkModeScreenState extends State<DarkModeScreen> {
       },
     );
   }
+  //            _themeStore.changeBrightnessToDark(!_themeStore.darkMode);
 
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {
     return Material(
-      child: Column(
-        children: <Widget>[],
-      ),
+      child: Column(children: <Widget>[
+        MergeSemantics(
+            child: StoreConnector<AppState, _SwitchDarkModeModel>(
+                converter: (store) => _SwitchDarkModeModel(
+                    isDark: store.state.theme.isDark,
+                    setBrightMode: () =>
+                        store.dispatch(new BrightThemeAction()),
+                    setDarkMode: () => store.dispatch(new DarkThemeAction())),
+                builder: (context, model) => ListTile(
+                      title: Container(
+                          padding: new EdgeInsets.only(
+                              top: 5.0, left: 10.0, bottom: 5.0),
+                          child: Text(
+                              AppLocalizations.of(context)
+                                  .translate('settings_enable_dark_mode'),
+                              style: Theme.of(context).textTheme.title)),
+                      trailing: CupertinoSwitch(
+                        value: model.isDark,
+                        onChanged: (bool value) {
+                          if (value) {
+                            model.setDarkMode();
+                          } else {
+                            model.setBrightMode();
+                          }
+                        },
+                      ),
+                      onTap: () {
+                        if (model.isDark) {
+                          model.setBrightMode();
+                        } else {
+                          model.setDarkMode();
+                        }
+                      },
+                    )))
+      ]),
     );
   }
+}
 
-
-  // General Methods:-----------------------------------------------------------
-  _showErrorMessage(String message) {
-    Future.delayed(Duration(milliseconds: 0), () {
-      if (message != null && message.isNotEmpty) {
-        FlushbarHelper.createError(
-          message: message,
-          title: AppLocalizations.of(context).translate('home_tv_error'),
-          duration: Duration(seconds: 3),
-        )..show(context);
-      }
-    });
-
-    return SizedBox.shrink();
-  }
-
-  // dispose:-------------------------------------------------------------------
-  @override
-  void dispose() {
-    // Clean up the controller when the Widget is removed from the Widget tree
-    _userEmailController.dispose();
-    _passwordController.dispose();
-    _passwordFocusNode.dispose();
-    super.dispose();
-  }
+class _SwitchDarkModeModel {
+  final bool isDark;
+  final Function() setBrightMode;
+  final Function() setDarkMode;
+  _SwitchDarkModeModel({this.isDark, this.setBrightMode, this.setDarkMode});
 }

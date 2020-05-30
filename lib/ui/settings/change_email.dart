@@ -1,20 +1,14 @@
-import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
+import 'package:boilerplate/redux/actions/auth_actions.dart';
+import 'package:boilerplate/redux/states/auth_state.dart';
+import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/stores/auth/auth_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
-import 'package:boilerplate/widgets/app_icon_widget.dart';
-import 'package:boilerplate/widgets/empty_app_bar_widget.dart';
-import 'package:boilerplate/widgets/progress_indicator_widget.dart';
-import 'package:boilerplate/widgets/textfield_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../stores/theme/theme_store.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:validators/validators.dart';
 
 class ChangeEmailScreen extends StatefulWidget {
   @override
@@ -23,74 +17,112 @@ class ChangeEmailScreen extends StatefulWidget {
 
 class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
   //text controllers:-----------------------------------------------------------
-  TextEditingController _userEmailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-
-  //stores:---------------------------------------------------------------------
-  ThemeStore _themeStore;
-
-  //focus node:-----------------------------------------------------------------
-  FocusNode _passwordFocusNode;
+  TextEditingController _emailController;
 
   //form key:-------------------------------------------------------------------
   final _formKey = GlobalKey<FormState>();
 
-  //stores:---------------------------------------------------------------------
-  final _store = AuthStore();
-
-  @override
-  void initState() {
-    super.initState();
-
-    _passwordFocusNode = FocusNode();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    _themeStore = Provider.of<ThemeStore>(context);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: _buildBody(),
-    );
+    return Form(
+        key: _formKey,
+        child: Scaffold(
+          appBar: _buildAppBar(),
+          body: _buildBody(),
+        ));
   }
 
   // app bar methods:-----------------------------------------------------------
   Widget _buildAppBar() {
     return AppBar(
-      leading: _buildHistoryBackButton(),
-      title: Text(AppLocalizations.of(context).translate('settings_change_email')),
-    );
+        leading: _buildHistoryBackButton(),
+        title: Text(
+            AppLocalizations.of(context).translate('settings_change_email')),
+        actions: <Widget>[_buildValidateButton()]);
+  }
+
+  Widget _buildValidateButton() {
+    return StoreConnector<AppState, _ChangeEmailModel>(
+        converter: (store) => _ChangeEmailModel(
+            state: store.state,
+            updateEmail: (String email) => store.dispatch(updateEmail(email))),
+        onWillChange: (previousViewModel, newViewModel) => {
+              if (previousViewModel.state.auth.transactionType ==
+                      AuthTransactionType.UPDATE_EMAIL &&
+                  previousViewModel.state.auth.isLoading == true &&
+                  newViewModel.state.auth.isSuccess == true)
+                {navigateToSettings(context)}
+              else if (previousViewModel.state.auth.transactionType ==
+                      AuthTransactionType.UPDATE_EMAIL &&
+                  previousViewModel.state.auth.isLoading == true &&
+                  newViewModel.state.auth.isSuccess == false)
+                {_showErrorMessage(newViewModel.state.auth.error)}
+            },
+        builder: (context, model) => IconButton(
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  DeviceUtils.hideKeyboard(context);
+                  model.updateEmail(_emailController.text);
+                } else {
+                  _showErrorMessage('Please fill in all fields');
+                }
+              },
+              icon: Icon(
+                Icons.check,
+              ),
+            ));
   }
 
   Widget _buildHistoryBackButton() {
-    return Observer(
-      builder: (context) {
-        return IconButton(
-          onPressed: () {
-            Navigator.of(context).pushReplacementNamed(Routes.settings);
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-          ),
-        );
+    return IconButton(
+      onPressed: () {
+        Navigator.of(context).pushReplacementNamed(Routes.settings);
       },
+      icon: Icon(
+        Icons.arrow_back_ios,
+      ),
     );
   }
 
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {
     return Material(
-      child: Column(
-        children: <Widget>[
-        ],
-      ),
-    );
+        child: Stack(
+      children: <Widget>[
+        Center(child: _buildEmailField()),
+      ],
+    ));
+  }
+
+  Widget _buildEmailField() {
+    return Column(children: <Widget>[
+      Container(
+        padding: new EdgeInsets.all(10.0),
+        child: StoreConnector<AppState, AppState>(
+            converter: (store) => store.state,
+            builder: (context, state) => TextFormField(
+                  initialValue: state.auth.user['email'],
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.email),
+                    hintText:
+                        AppLocalizations.of(context).translate('login_email'),
+                  ),
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  autocorrect: false,
+                  validator: _validateEmail,
+                )),
+      )
+    ]);
+  }
+
+  String _validateEmail(String email) {
+    if (email.isEmpty) {
+      return "Email can't be empty";
+    } else if (!isEmail(email)) {
+      return 'Please enter a valid email address';
+    }
+    return null;
   }
 
   // General Methods:-----------------------------------------------------------
@@ -108,13 +140,24 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
     return SizedBox.shrink();
   }
 
+  Widget navigateToSettings(BuildContext context) {
+    Future.delayed(Duration(milliseconds: 0), () {
+      Navigator.of(context).pushReplacementNamed(Routes.settings);
+    });
+    return Container();
+  }
+
   // dispose:-------------------------------------------------------------------
   @override
   void dispose() {
     // Clean up the controller when the Widget is removed from the Widget tree
-    _userEmailController.dispose();
-    _passwordController.dispose();
-    _passwordFocusNode.dispose();
+    _emailController.dispose();
     super.dispose();
   }
+}
+
+class _ChangeEmailModel {
+  final AppState state;
+  final Function(String) updateEmail;
+  _ChangeEmailModel({this.state, this.updateEmail});
 }

@@ -10,24 +10,28 @@
   "login_no_account_yet": "No account yet? Sign up.",
   "login_btn_send_password_recovery_email": "Send",
   "login_end": "------------------------------------------------------------------------------------",
-  "register_already_have_an_account": "Already have an account? Log in.", 
+  "register_already_have_an_account": "Already have an account? Log in.",
   "register_btn_sign_up": "Sign up",
-
   "home_start": "Below are list of strings for home",
   "home_tv_posts": "Indlæg",
   "home_tv_error": "Fejl",
   "home_tv_no_post_found": "Ingen indlæg fundet",
   "home_tv_choose_language": "Vælg sprog",
   "home_end": "-------------------------------------------------------------------------------------",
-
   "settings_title": "Settings",
   "settings_account": "Account",
   "settings_general": "General",
   "settings_change_password": "Change your password",
-  "settings_delete_account": "Delete your account",
   "settings_change_email": "Change your email",
-  "settings_dark_mode": "Dark mode",
+  "settings_dark_mode": "Dark Mode",
+  "settings_enable_dark_mode": "Enable Dark Mode",
   "settings_logout": "Log out",
-  "settings_language": "Choose language"
-
+  "settings_language": "Choose language",
+  "settings_actual_password": "Actual Password",
+  "settings_new_password": "New Password",
+  "settings_delete_account": "Delete account",
+  "settings_delete_account_question": "Are you sure you want to delete your account?",
+  "settings_delete_account_title": "Delete your account",
+  "settings_delete_account_confirm": "Confirm",
+  "settings_delete_account_enter_password": "Enter your password"
 }
