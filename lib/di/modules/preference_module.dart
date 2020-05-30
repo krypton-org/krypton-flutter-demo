@@ -23,7 +23,7 @@ class PreferenceModule {
   /// A singleton preference helper provider.
   ///
   /// Calling it multiple times will return the same instance.
-  SharedPreferenceHelper provideSharedPreferenceHelper() {
-    return SharedPreferenceHelper(sharedPref);
-  }
+  // SharedPreferenceHelper provideSharedPreferenceHelper() {
+  //   return SharedPreferenceHelper(sharedPref);
+  // }
 }

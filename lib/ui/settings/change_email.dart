@@ -1,16 +1,9 @@
 import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/stores/auth/auth_store.dart';
-import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
-import 'package:boilerplate/widgets/progress_indicator_widget.dart';
-import 'package:boilerplate/widgets/textfield_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
-
-import '../../stores/theme/theme_store.dart';
 
 class ChangeEmailScreen extends StatefulWidget {
   @override

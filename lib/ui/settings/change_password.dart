@@ -1,19 +1,9 @@
 import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/stores/auth/auth_store.dart';
-import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
-import 'package:boilerplate/widgets/app_icon_widget.dart';
-import 'package:boilerplate/widgets/empty_app_bar_widget.dart';
-import 'package:boilerplate/widgets/progress_indicator_widget.dart';
-import 'package:boilerplate/widgets/textfield_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../stores/theme/theme_store.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   @override
@@ -58,7 +48,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget _buildAppBar() {
     return AppBar(
       leading: _buildHistoryBackButton(),
-      title: Text(AppLocalizations.of(context).translate('settings_change_password')),
+      title: Text(
+          AppLocalizations.of(context).translate('settings_change_password')),
     );
   }
 
@@ -85,7 +76,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       ),
     );
   }
-
 
   // General Methods:-----------------------------------------------------------
   _showErrorMessage(String message) {
