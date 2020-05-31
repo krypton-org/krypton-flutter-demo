@@ -5,6 +5,7 @@ import 'package:boilerplate/redux/states/language_state.dart';
 import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {
     return Material(
-      child: Column(
+        child: Stack(children: <Widget>[
+      Column(
         children: <Widget>[
           Align(
               alignment: Alignment.centerLeft,
@@ -78,7 +80,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
           _buildGeneralSettingsList(),
         ],
       ),
-    );
+      StoreConnector<AppState, bool>(
+        converter: (store) => store.state.auth.isLoading,
+        builder: (context, isLoading) => Visibility(
+          visible: isLoading,
+          child: CustomProgressIndicatorWidget(),
+        ),
+      )
+    ]));
   }
 
   _buildAccountSettingsList() {
@@ -183,7 +192,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             converter: (store) {
               return _LogoutTileModel(
                   auth: store.state.auth,
-                  logout: () => store.dispatch(logOut()));
+                  logout: () => store.dispatch(logout()));
             },
             onWillChange: (previousViewModel, newViewModel) => {
                   if (previousViewModel.auth.transactionType ==

@@ -4,6 +4,7 @@ import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,12 +62,21 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {
     return Material(
-      child: Column(
-        children: <Widget>[
-          Center(child: _buildActualPasswordField()),
-          Center(child: _buildNewPasswordField())
-        ],
-      ),
+      child: Stack(children: <Widget>[
+        Column(
+          children: <Widget>[
+            Center(child: _buildActualPasswordField()),
+            Center(child: _buildNewPasswordField()),
+          ],
+        ),
+        StoreConnector<AppState, bool>(
+          converter: (store) => store.state.auth.isLoading,
+          builder: (context, isLoading) => Visibility(
+            visible: isLoading,
+            child: CustomProgressIndicatorWidget(),
+          ),
+        )
+      ]),
     );
   }
 

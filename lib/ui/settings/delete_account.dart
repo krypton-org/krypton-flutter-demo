@@ -3,6 +3,7 @@ import 'package:boilerplate/redux/states/auth_state.dart';
 import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -54,8 +55,8 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {
     return Material(
-      child: Column(
-        children: <Widget>[
+        child: Stack(
+      children: <Widget>[
           Card(
               child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
             ListTile(
@@ -75,7 +76,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                     _buildPasswordDialog();
                   },
                 ))
-          ]))
+          ])),
         ],
       ),
     );

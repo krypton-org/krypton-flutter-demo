@@ -186,10 +186,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: StoreConnector<AppState, _RegisterModel>(
             converter: (store) => _RegisterModel(
                 state: store.state,
-                login: (String email, String password) async =>
-                    await store.dispatch(login(email, password)),
-                register: (String email, String password) async =>
-                    await store.dispatch(register(email, password))),
+                registerAndLogin: (String email, String password) async =>
+                    await store.dispatch(registerAndLogin(email, password))),
             onWillChange: (previousViewModel, newViewModel) => {
                   if (previousViewModel.state.auth.transactionType ==
                           AuthTransactionType.LOGIN &&
@@ -216,9 +214,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       DeviceUtils.hideKeyboard(context);
-                      await model.register(
-                          _emailController.text, _passwordController.text);
-                      await model.login(
+                      await model.registerAndLogin(
                           _emailController.text, _passwordController.text);
                     } else {
                       _showErrorMessage('Please fill in all fields');
@@ -273,8 +269,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
 class _RegisterModel {
   final AppState state;
-  final Function(String, String) register;
-  final Function(String, String) login;
+  final Function(String, String) registerAndLogin;
 
-  _RegisterModel({this.state, this.login, this.register});
+  _RegisterModel({this.state, this.registerAndLogin});
 }

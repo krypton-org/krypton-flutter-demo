@@ -4,6 +4,7 @@ import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class ChangeEmailScreen extends StatefulWidget {
 
 class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
   //text controllers:-----------------------------------------------------------
-  TextEditingController _emailController;
+  TextEditingController _emailController = TextEditingController();
 
   //form key:-------------------------------------------------------------------
   final _formKey = GlobalKey<FormState>();
@@ -90,6 +91,13 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
         child: Stack(
       children: <Widget>[
         Center(child: _buildEmailField()),
+        StoreConnector<AppState, bool>(
+            converter: (store) => store.state.auth.isLoading,
+            builder: (context, isLoading) => Visibility(
+              visible: isLoading,
+              child: CustomProgressIndicatorWidget(),
+            ),
+          )
       ],
     ));
   }
@@ -100,8 +108,8 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
         padding: new EdgeInsets.all(10.0),
         child: StoreConnector<AppState, AppState>(
             converter: (store) => store.state,
+            onInit: (store) => _emailController.text = store.state.auth.user['email'],
             builder: (context, state) => TextFormField(
-                  initialValue: state.auth.user['email'],
                   decoration: InputDecoration(
                     icon: Icon(Icons.email),
                     hintText:

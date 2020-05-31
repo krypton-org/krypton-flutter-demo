@@ -52,7 +52,7 @@ dependencies:
   validators: ^2.0.0+1
 
   # A powerful Http client for Dart
-  dio: 3.0.8
+  dio: 3.0.9
 
   # A flexible widget for user notification.
   # Do not upgrade until Flutter 1.15 is on stable channel
