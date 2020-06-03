@@ -6,9 +6,9 @@ import 'package:redux_thunk/redux_thunk.dart';
 
 import '../store.dart';
 
-Map<String, dynamic> addTodoQuery(String text, String userId){
-    return {
-        'query': r'''mutation todoCreateOne($text: String!, $userId: String!) {
+Map<String, dynamic> addTodoQuery(String text, String userId) {
+  return {
+    'query': r'''mutation todoCreateOne($text: String!, $userId: String!) {
             todoCreateOne(record: {text: $text, userId: $userId}) {
                 record{
                     text
@@ -18,13 +18,13 @@ Map<String, dynamic> addTodoQuery(String text, String userId){
                 }
             }
         }''',
-        'variables': { 'text': text, 'userId': userId },
-    };
+    'variables': {'text': text, 'userId': userId},
+  };
 }
 
-Map<String, dynamic> deleteTodoQuery(String id){
-    return {
-        'query': r'''mutation todoRemoveById($id: MongoID!){
+Map<String, dynamic> deleteTodoQuery(String id) {
+  return {
+    'query': r'''mutation todoRemoveById($id: MongoID!){
             todoRemoveById(_id: $id){
                 record{
                     text
@@ -34,13 +34,13 @@ Map<String, dynamic> deleteTodoQuery(String id){
                 }
             }
         }''',
-        'variables': { 'id': id }
-    };
+    'variables': {'id': id}
+  };
 }
 
-Map<String, dynamic> completeTodoQuery(String id){
-    return {
-        'query': r'''mutation todoUpdateById($id: MongoID!){
+Map<String, dynamic> completeTodoQuery(String id) {
+  return {
+    'query': r'''mutation todoUpdateById($id: MongoID!){
             todoUpdateById(record:{_id: $id, isCompleted: true}){
                 record{
                     text
@@ -50,13 +50,13 @@ Map<String, dynamic> completeTodoQuery(String id){
                 }
             }
         }''',
-        'variables': { 'id': id }
-    };
+    'variables': {'id': id}
+  };
 }
 
-Map<String, dynamic> fetchTodoQuery(String userId){
-    return {
-        'query': r'''query todoMany($userId: String!){
+Map<String, dynamic> fetchTodoQuery(String userId) {
+  return {
+    'query': r'''query todoMany($userId: String!){
             todoMany(filter: {userId: $userId}){
                 text
                 isCompleted
@@ -64,8 +64,8 @@ Map<String, dynamic> fetchTodoQuery(String userId){
                 _id
             }
         }''',
-        'variables': { 'userId': userId }
-    };
+    'variables': {'userId': userId}
+  };
 }
 
 // export const addTodo = (text: string) => {
@@ -97,12 +97,13 @@ ThunkAction<AppState> addTodo(String text) {
   return (Store<AppState> store) async {
     store.dispatch(new TransactionStartAction(TodoTransactionType.ADD_TODO));
     try {
-      Response res = await fetch(addTodoQuery(text, store.state.auth.user['_id']));
-      if (res.data['errors'] == null && res.data.data?.todoCreateOne?.record != null) {
+      Response res =
+          await fetch(addTodoQuery(text, store.state.auth.user['_id']));
+      if (res.data['errors'] == null &&
+          res.data.data?.todoCreateOne?.record != null) {
         Map<String, dynamic> todoData = res.data.data?.todoCreateOne?.record;
         Todo todo = new Todo(
-          text: todoData['text'], 
-          isCompleted: todoData['isCompleted']);
+            text: todoData['text'], isCompleted: todoData['isCompleted']);
         store.state.todos.todos.add(todo);
         store.dispatch(new TransactionSucceedAction(store.state.todos.todos));
       } else {
@@ -234,7 +235,6 @@ ThunkAction<AppState> completeTodo(String todoId) {
 //     };
 // };
 
-
 class TransactionStartAction {
   TodoTransactionType transactionType;
   TransactionStartAction(this.transactionType);
@@ -249,8 +249,6 @@ class TransactionSucceedAction {
   List<Todo> todos;
   TransactionSucceedAction(this.todos);
 }
-
-
 
 Dio dio = new Dio();
 Future<Response> fetch(Map<String, dynamic> query) async {
@@ -271,19 +269,18 @@ Future<Response> fetch(Map<String, dynamic> query) async {
   // return response.data['data'];
 }
 
-
-ThunkAction<AppState> fetchTodo(String todoId) {
+ThunkAction<AppState> fetchTodos() {
   return (Store<AppState> store) async {
     store.dispatch(new TransactionStartAction(TodoTransactionType.FETCH_TODO));
     try {
       Response res = await fetch(fetchTodoQuery(store.state.auth.user['_id']));
-      if (res.data['errors'] == null && res.data.data?.todoMany != null) {
-        List<Map<String, dynamic>> todoData = res.data.data?.todoMany;
+      if (res.data['errors'] == null && res.data["data"]["todoMany"] != null) {
+        List<dynamic> todoData = res.data["data"]["todoMany"];
         List<Todo> todos = new List<Todo>();
         for (var i = 0; i < todoData.length; i++) {
           todos.add(new Todo(
-          text: todoData[0]['text'], 
-          isCompleted: todoData[0]['isCompleted']));
+              text: todoData[i]['text'],
+              isCompleted: todoData[i]['isCompleted']));
         }
         store.dispatch(new TransactionSucceedAction(todos));
       } else {

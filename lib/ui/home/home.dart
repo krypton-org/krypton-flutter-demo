@@ -1,9 +1,13 @@
+import 'package:boilerplate/redux/actions/todo_action.dart';
+import 'package:boilerplate/redux/states/todo_state.dart';
+import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,29 +16,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //stores:---------------------------------------------------------------------
-  // PostStore _postStore;
-  // ThemeStore _themeStore;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    // initializing stores
-    // _themeStore = Provider.of<ThemeStore>(context);
-    // _postStore = Provider.of<PostStore>(context);
-
-    // // check to see if already called api
-    // if (!_postStore.loading) {
-    //   _postStore.getPosts();
-    // }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,71 +55,63 @@ class _HomeScreenState extends State<HomeScreen> {
       children: <Widget>[
         _handleErrorMessage(),
         _buildMainContent(),
+        StoreConnector<AppState, bool>(
+          converter: (store) => store.state.todos.isLoading,
+          builder: (context, isLoading) => Visibility(
+            visible: isLoading,
+            child: CustomProgressIndicatorWidget(),
+          ),
+        )
       ],
     );
   }
 
   Widget _buildMainContent() {
-    return ListTile();
-    // return Observer(
-    //   builder: (context) {
-    //     return _postStore.loading
-    //         ? CustomProgressIndicatorWidget()
-    //         : Material(child: _buildListView());
-    //   },
-    // );
+    return StoreConnector<AppState, _HomeModel>(
+        converter: (store) => _HomeModel(
+            todos: store.state.todos.todos, fetchTodos: () => store.dispatch(fetchTodos())),
+        onInitialBuild: (model) => model.fetchTodos(),
+        builder: (context, model) => _buildList(model.todos));
   }
 
-  Widget _buildListView() {
-    // return _postStore.postList != null
-    //     ? ListView.separated(
-    //         itemCount: _postStore.postList.posts.length,
-    //         separatorBuilder: (context, position) {
-    //           return Divider();
-    //         },
-    //         itemBuilder: (context, position) {
-    //           return _buildListItem(position);
-    //         },
-    //       )
-    //     : Center(
-    //         child: Text(
-    //           AppLocalizations.of(context).translate('home_tv_no_post_found'),
-    //         ),
-    //       );
+  Widget _buildList(List<Todo> todos) {
+    if (todos == null || todos.length == 0) {
+      return Center(
+        child: Text(
+          AppLocalizations.of(context).translate('home_tv_no_post_found'),
+        ),
+      );
+    } else {
+      return ListView.separated(
+        itemCount: todos.length,
+        separatorBuilder: (context, position) {
+          return Divider();
+        },
+        itemBuilder: (context, position) {
+          return _buildListItem(todos[position]);
+        },
+      );
+    }
   }
 
-  Widget _buildListItem(int position) {
-    // return ListTile(
-    //   dense: true,
-    //   leading: Icon(Icons.cloud_circle),
-    //   title: Text(
-    //     '${_postStore.postList.posts[position].title}',
-    //     maxLines: 1,
-    //     overflow: TextOverflow.ellipsis,
-    //     softWrap: false,
-    //     style: Theme.of(context).textTheme.title,
-    //   ),
-    //   subtitle: Text(
-    //     '${_postStore.postList.posts[position].body}',
-    //     maxLines: 1,
-    //     overflow: TextOverflow.ellipsis,
-    //     softWrap: false,
-    //   ),
-    // );
+  Widget _buildListItem(Todo todo) {
+    return ListTile(
+      dense: true,
+      leading: todo.isCompleted ? Icon(Icons.check, color: Colors.green[500]) : Icon(Icons.access_time, color: Colors.grey[500]),
+      title: Text(
+        '${todo.text}',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        softWrap: false,
+        style: Theme.of(context).textTheme.title,
+      ),
+    );
   }
 
   Widget _handleErrorMessage() {
     return ListTile();
 
-    // return Observer(
-    //   builder: (context) {
-    //     if (_postStore.errorStore.errorMessage.isNotEmpty) {
-    //       return _showErrorMessage(_postStore.errorStore.errorMessage);
-    //     }
-
-    //     return SizedBox.shrink();
-    //   },
-    // );
+   
   }
 
   // General Methods:-----------------------------------------------------------
@@ -155,4 +128,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // return SizedBox.shrink();
   }
+}
+
+class _HomeModel {
+  final List<Todo> todos;
+  final Function() fetchTodos;
+  _HomeModel({this.todos, this.fetchTodos});
 }
