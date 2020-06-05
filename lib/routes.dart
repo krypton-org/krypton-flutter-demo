@@ -1,3 +1,4 @@
+import 'package:boilerplate/ui/todos/add_todo.dart';
 import 'package:boilerplate/ui/register/register.dart';
 import 'package:boilerplate/ui/settings/change_email.dart';
 import 'package:boilerplate/ui/settings/change_password.dart';
@@ -23,6 +24,7 @@ class Routes {
   static const String changeEmail = '/changeEmail';
   static const String darkMode = '/darkMode';
   static const String deleteAccount = '/deleteAccount';
+  static const String addTodo = '/addAccount';
 
   static final routes = <String, WidgetBuilder>{
     splash: (BuildContext context) => SplashScreen(),
@@ -34,6 +36,7 @@ class Routes {
     changeEmail: (BuildContext context) => ChangeEmailScreen(),
     darkMode: (BuildContext context) => DarkModeScreen(),
     deleteAccount: (BuildContext context) => DeleteAccountScreen(),
+    addTodo: (BuildContext context) => AddTodoScreen(),
   };
 }
 

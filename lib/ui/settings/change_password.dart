@@ -194,7 +194,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       if (message != null && message.isNotEmpty) {
         FlushbarHelper.createError(
           message: message,
-          title: AppLocalizations.of(context).translate('home_tv_error'),
+          title: AppLocalizations.of(context).translate('global_error'),
           duration: Duration(seconds: 3),
         )..show(context);
       }

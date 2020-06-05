@@ -68,44 +68,20 @@ Map<String, dynamic> fetchTodoQuery(String userId) {
   };
 }
 
-// export const addTodo = (text: string) => {
-//     return async (dispatch: any, getState: () => RootState) => {
-//         dispatch(transactionBegin(TodoTransactionType.ADD_TODO));
-//         try {
-//             const graphQLQuery = addTodoQuery(text, getState().auth.krypton.getUser()._id);
-//             const res = await sendRequest(getState().auth.krypton.getAuthorizationHeader(), graphQLQuery);
-//             if (res.data) {
-//                 const todo = res.data.todoCreateOne.record;
-//                 dispatch(transactionSuccess([todo, ...getState().todo.list]));
-//             } else {
-//                 throw new Error('Transaction failed');
-//             }
-//         } catch (err) {
-//             dispatch(transactionFailure());
-//             dispatch(
-//                 notify({
-//                     message: err.message,
-//                     date: new Date(),
-//                     type: Severity.DANGER,
-//                 }),
-//             );
-//         }
-//     };
-// };
-
 ThunkAction<AppState> addTodo(String text) {
   return (Store<AppState> store) async {
     store.dispatch(new TransactionStartAction(TodoTransactionType.ADD_TODO));
     try {
-      Response res =
-          await fetch(addTodoQuery(text, store.state.auth.user['_id']));
-      if (res.data['errors'] == null &&
-          res.data.data?.todoCreateOne?.record != null) {
-        Map<String, dynamic> todoData = res.data.data?.todoCreateOne?.record;
+      Response res = await fetch(
+          addTodoQuery(text, KryptonSingleton.getInstance().user['_id']));
+      if (res.data['errors'] == null && res.data["data"] != null) {
+        dynamic todoData = res.data["data"]["todoCreateOne"]['record'];
         Todo todo = new Todo(
-            text: todoData['text'], isCompleted: todoData['isCompleted']);
-        store.state.todos.todos.add(todo);
-        store.dispatch(new TransactionSucceedAction(store.state.todos.todos));
+            id: todoData['_id'],
+            text: todoData['text'],
+            isCompleted: todoData['isCompleted']);
+        List<Todo> todos = [...store.state.todos.todos, todo];
+        store.dispatch(new TransactionSucceedAction(todos));
       } else {
         throw new Exception('Transaction failed');
       }
@@ -114,44 +90,16 @@ ThunkAction<AppState> addTodo(String text) {
     }
   };
 }
-
-// export const deleteTodo = (todoId: string) => {
-//     return async (dispatch: any, getState: () => RootState) => {
-//         dispatch(transactionBegin(TodoTransactionType.DELETE_TODO));
-//         try {
-//             const graphQLQuery = deleteTodoQuery(todoId);
-//             const res = await sendRequest(getState().auth.krypton.getAuthorizationHeader(), graphQLQuery);
-//             if (res.data) {
-//                 const todos = getState().todo.list.filter((todo) => todo._id !== res.data.todoRemoveById.record._id);
-//                 dispatch(transactionSuccess(todos));
-//             } else {
-//                 throw new Error('Transaction failed');
-//             }
-//         } catch (err) {
-//             dispatch(transactionFailure());
-//             dispatch(
-//                 notify({
-//                     message: err.message,
-//                     date: new Date(),
-//                     type: Severity.DANGER,
-//                 }),
-//             );
-//         }
-//     };
-// };
 
 ThunkAction<AppState> deleteTodo(String todoId) {
   return (Store<AppState> store) async {
     store.dispatch(new TransactionStartAction(TodoTransactionType.DELETE_TODO));
     try {
-      const graphQLQuery =
-          ""; //addTodoQuery(text, getState().auth.krypton.getUser()._id);
-      const res =
-          null; //await sendRequest(getState().auth.krypton.getAuthorizationHeader(), graphQLQuery);
-      if (res.data) {
-        Todo todo = new Todo(); //res.data.todoCreateOne.record;
-        store.state.todos.todos.add(todo);
-        store.dispatch(new TransactionSucceedAction(store.state.todos.todos));
+      Response res = await fetch(deleteTodoQuery(todoId));
+      if (res.data['errors'] == null) {
+        List<Todo> todos =
+            store.state.todos.todos.where((current) => current.id != todoId).toList();
+        store.dispatch(new TransactionSucceedAction(todos));
       } else {
         throw new Exception('Transaction failed');
       }
@@ -160,48 +108,21 @@ ThunkAction<AppState> deleteTodo(String todoId) {
     }
   };
 }
-
-// export const completeTodo = (todoId: string) => {
-//     return async (dispatch: any, getState: () => RootState) => {
-//         dispatch(transactionBegin(TodoTransactionType.UPDATE_TODO));
-//         try {
-//             const graphQLQuery = completeTodoQuery(todoId);
-//             const res = await sendRequest(getState().auth.krypton.getAuthorizationHeader(), graphQLQuery);
-//             if (res.data) {
-//                 const todo = res.data.todoUpdateById.record;
-//                 dispatch(
-//                     transactionSuccess(
-//                         getState().todo.list.map((currTodo) => (currTodo._id === todo._id ? todo : currTodo)),
-//                     ),
-//                 );
-//             } else {
-//                 throw new Error('Transaction failed');
-//             }
-//         } catch (err) {
-//             dispatch(transactionFailure());
-//             dispatch(
-//                 notify({
-//                     message: err.message,
-//                     date: new Date(),
-//                     type: Severity.DANGER,
-//                 }),
-//             );
-//         }
-//     };
-// };
 
 ThunkAction<AppState> completeTodo(String todoId) {
   return (Store<AppState> store) async {
     store.dispatch(new TransactionStartAction(TodoTransactionType.UPDATE_TODO));
     try {
-      const graphQLQuery =
-          ""; //addTodoQuery(text, getState().auth.krypton.getUser()._id);
-      const res =
-          null; //await sendRequest(getState().auth.krypton.getAuthorizationHeader(), graphQLQuery);
-      if (res.data) {
-        Todo todo = new Todo(); //res.data.todoCreateOne.record;
-        store.state.todos.todos.add(todo);
-        store.dispatch(new TransactionSucceedAction(store.state.todos.todos));
+      Response res = await fetch(completeTodoQuery(todoId));
+      if (res.data['errors'] == null && res.data["data"] != null) {
+        dynamic todoData = res.data["data"]["todoUpdateById"]['record'];
+        Todo todo = new Todo(
+            id: todoData['_id'],
+            text: todoData['text'],
+            isCompleted: todoData['isCompleted']);
+        List<Todo> todos = store.state.todos.todos
+            .map((current) => current.id == todo.id ? todo : current).toList();
+        store.dispatch(new TransactionSucceedAction(todos));
       } else {
         throw new Exception('Transaction failed');
       }
@@ -210,30 +131,6 @@ ThunkAction<AppState> completeTodo(String todoId) {
     }
   };
 }
-
-// export const fetchTodo = () => {
-//     return async (dispatch: any, getState: () => RootState) => {
-//         dispatch(transactionBegin(TodoTransactionType.FETCH_TODO));
-//         try {
-//             const graphQLQuery = fetchTodoQuery(getState().auth.krypton.getUser()._id);
-//             const res = await sendRequest(getState().auth.krypton.getAuthorizationHeader(), graphQLQuery);
-//             if (res.data) {
-//                 dispatch(transactionSuccess(res.data.todoMany));
-//             } else {
-//                 throw new Error('Transaction failed');
-//             }
-//         } catch (err) {
-//             dispatch(transactionFailure());
-//             dispatch(
-//                 notify({
-//                     message: err.message,
-//                     date: new Date(),
-//                     type: Severity.DANGER,
-//                 }),
-//             );
-//         }
-//     };
-// };
 
 class TransactionStartAction {
   TodoTransactionType transactionType;
@@ -279,6 +176,7 @@ ThunkAction<AppState> fetchTodos() {
         List<Todo> todos = new List<Todo>();
         for (var i = 0; i < todoData.length; i++) {
           todos.add(new Todo(
+              id: todoData[i]['_id'],
               text: todoData[i]['text'],
               isCompleted: todoData[i]['isCompleted']));
         }

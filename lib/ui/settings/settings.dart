@@ -225,7 +225,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         borderRadius: 5.0,
         enableFullWidth: true,
         title: Text(
-          AppLocalizations.of(context).translate('home_tv_choose_language'),
+          AppLocalizations.of(context).translate('settings_choose_language'),
           style: TextStyle(
             color: Colors.white,
             fontSize: 16.0,
@@ -284,7 +284,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (message != null && message.isNotEmpty) {
         FlushbarHelper.createError(
           message: message,
-          title: AppLocalizations.of(context).translate('home_tv_error'),
+          title: AppLocalizations.of(context).translate('global_error'),
           duration: Duration(seconds: 3),
         )..show(context);
       }
