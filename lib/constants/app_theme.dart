@@ -26,21 +26,21 @@ import 'package:boilerplate/constants/font_family.dart';
 import 'package:flutter/material.dart';
 
 final ThemeData themeData = new ThemeData(
-    fontFamily: FontFamily.productSans,
-    brightness: Brightness.light,
-    primarySwatch: MaterialColor(Colors.blue[400].value, AppColors.blue),
-    primaryColor: Colors.blue[400],
-    primaryColorBrightness: Brightness.light,
-    accentColor: Colors.blue[400],
-    accentColorBrightness: Brightness.light,
-    buttonColor: Colors.blue[400],
+  fontFamily: FontFamily.productSans,
+  brightness: Brightness.light,
+  primarySwatch: MaterialColor(Colors.blue[400].value, AppColors.blue),
+  primaryColor: Colors.blue[400],
+  primaryColorBrightness: Brightness.light,
+  accentColor: Colors.blue[400],
+  accentColorBrightness: Brightness.light,
+  buttonColor: Colors.blue[400],
 );
 
 final ThemeData themeDataDark = ThemeData(
   fontFamily: FontFamily.productSans,
   brightness: Brightness.dark,
-  primaryColor: AppColors.blue[500],
+  primaryColor: Colors.blue[400],
   primaryColorBrightness: Brightness.dark,
-  accentColor: AppColors.blue[500],
+  accentColor: Colors.blue[400],
   accentColorBrightness: Brightness.dark,
 );

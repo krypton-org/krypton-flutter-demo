@@ -28,4 +28,4 @@ class Todo {
 }
 
 TodoState getInitTodoState() =>
-    TodoState(isLoading: false, isSuccess: false, todos: []);
+    TodoState(isLoading: false, isSuccess: false, todos: null);
