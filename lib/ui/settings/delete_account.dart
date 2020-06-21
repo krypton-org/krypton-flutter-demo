@@ -35,28 +35,16 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
   // app bar methods:-----------------------------------------------------------
   Widget _buildAppBar() {
     return AppBar(
-      leading: _buildHistoryBackButton(),
       title: Text(
           AppLocalizations.of(context).translate('settings_delete_account')),
-    );
-  }
-
-  Widget _buildHistoryBackButton() {
-    return IconButton(
-      onPressed: () {
-        Navigator.of(context).pushReplacementNamed(Routes.settings);
-      },
-      icon: Icon(
-        Icons.arrow_back_ios,
-      ),
     );
   }
 
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {
     return Material(
-        child: Stack(
-      children: <Widget>[
+      child: Stack(
+        children: <Widget>[
           Card(
               child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
             ListTile(

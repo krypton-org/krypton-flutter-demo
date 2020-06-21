@@ -4,12 +4,12 @@ import 'package:boilerplate/redux/states/auth_state.dart';
 import 'package:boilerplate/redux/states/language_state.dart';
 import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
+import 'package:boilerplate/utils/krypton/krypton_singleton.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:material_dialog/material_dialog.dart';
 import 'package:redux/redux.dart';
@@ -31,23 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // app bar methods:-----------------------------------------------------------
   Widget _buildAppBar() {
     return AppBar(
-      leading: _buildHistoryBackButton(),
       title: Text(AppLocalizations.of(context).translate('settings_title')),
-    );
-  }
-
-  Widget _buildHistoryBackButton() {
-    return Observer(
-      builder: (context) {
-        return IconButton(
-          onPressed: () {
-            Navigator.of(context).pushReplacementNamed(Routes.home);
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-          ),
-        );
-      },
     );
   }
 
@@ -97,7 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         leading: Icon(Icons.email),
         title: FlatButton(
             onPressed: () {
-              Navigator.of(context).pushReplacementNamed(Routes.changeEmail);
+              Navigator.of(context).pushNamed(Routes.changeEmail);
             },
             child: Align(
                 alignment: Alignment.centerLeft,
@@ -115,7 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         leading: Icon(Icons.lock),
         title: FlatButton(
             onPressed: () {
-              Navigator.of(context).pushReplacementNamed(Routes.changePassword);
+              Navigator.of(context).pushNamed(Routes.changePassword);
             },
             child: Align(
                 alignment: Alignment.centerLeft,
@@ -133,7 +117,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         leading: Icon(Icons.delete),
         title: FlatButton(
             onPressed: () {
-              Navigator.of(context).pushReplacementNamed(Routes.deleteAccount);
+              Navigator.of(context).pushNamed(Routes.deleteAccount);
             },
             child: Align(
                 alignment: Alignment.centerLeft,
@@ -173,7 +157,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         leading: Icon(Icons.brightness_3),
         title: FlatButton(
             onPressed: () {
-              Navigator.of(context).pushReplacementNamed(Routes.darkMode);
+              Navigator.of(context).pushNamed(Routes.darkMode);
             },
             child: Align(
                 alignment: Alignment.centerLeft,
@@ -194,13 +178,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   auth: store.state.auth,
                   logout: () => store.dispatch(logout()));
             },
-            onWillChange: (previousViewModel, newViewModel) => {
-                  if (previousViewModel.auth.transactionType ==
-                          AuthTransactionType.LOGOUT &&
-                      previousViewModel.auth.isSuccess == false &&
-                      newViewModel.auth.isSuccess == true)
-                    {Navigator.of(context).pushReplacementNamed(Routes.login)}
-                },
+            onWillChange: (previousViewModel, newViewModel) async {
+              if (previousViewModel.auth.transactionType ==
+                      AuthTransactionType.LOGOUT &&
+                  newViewModel.auth.isSuccess == true) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    Routes.login, (Route<dynamic> route) => false);
+              }
+              if (previousViewModel.auth.transactionType ==
+                      AuthTransactionType.LOGOUT &&
+                  newViewModel.auth.isSuccess == false) {
+                (await KryptonSingleton.getInstance()).reinitialize();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    Routes.login, (Route<dynamic> route) => false);
+              }
+            },
             builder: (context, model) => FlatButton(
                 onPressed: () async {
                   model.logout();

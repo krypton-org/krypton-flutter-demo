@@ -24,26 +24,9 @@ class _DarkModeScreenState extends State<DarkModeScreen> {
   // app bar methods:-----------------------------------------------------------
   Widget _buildAppBar() {
     return AppBar(
-      leading: _buildHistoryBackButton(),
       title: Text(AppLocalizations.of(context).translate('settings_dark_mode')),
     );
   }
-
-  Widget _buildHistoryBackButton() {
-    return Observer(
-      builder: (context) {
-        return IconButton(
-          onPressed: () {
-            Navigator.of(context).pushReplacementNamed(Routes.settings);
-          },
-          icon: Icon(
-            Icons.arrow_back_ios,
-          ),
-        );
-      },
-    );
-  }
-  //            _themeStore.changeBrightnessToDark(!_themeStore.darkMode);
 
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {

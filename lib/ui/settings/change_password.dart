@@ -42,21 +42,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   // app bar methods:-----------------------------------------------------------
   Widget _buildAppBar() {
     return AppBar(
-        leading: _buildHistoryBackButton(),
         title: Text(
             AppLocalizations.of(context).translate('settings_change_password')),
         actions: <Widget>[_buildValidateButton()]);
-  }
-
-  Widget _buildHistoryBackButton() {
-    return IconButton(
-      onPressed: () {
-        Navigator.of(context).pushReplacementNamed(Routes.settings);
-      },
-      icon: Icon(
-        Icons.arrow_back_ios,
-      ),
-    );
   }
 
   // body methods:--------------------------------------------------------------

@@ -1,5 +1,5 @@
-import 'package:boilerplate/models/krypton/krypton_singleton.dart';
 import 'package:boilerplate/redux/states/todo_state.dart';
+import 'package:boilerplate/utils/krypton/krypton_singleton.dart';
 import 'package:dio/dio.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';

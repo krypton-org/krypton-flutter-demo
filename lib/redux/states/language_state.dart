@@ -1,4 +1,4 @@
-import 'package:boilerplate/models/language/Language.dart';
+import 'package:boilerplate/utils/language/Language.dart';
 
 List<Language> supportedLanguages = [
   Language(code: 'US', locale: 'en', language: 'English'),
@@ -12,6 +12,10 @@ class LanguageState {
   String get locale => _locale;
 
   LanguageState(this._locale);
+
+  static LanguageState fromJson(dynamic json) => LanguageState(json["locale"]);
+
+  dynamic toJson() => {'locale': _locale};
 
   String getCode() {
     var code;

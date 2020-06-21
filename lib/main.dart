@@ -3,16 +3,18 @@ import 'package:boilerplate/constants/strings.dart';
 import 'package:boilerplate/redux/states/language_state.dart';
 import 'package:boilerplate/redux/store.dart';
 import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/ui/splash/splash.dart';
+import 'package:boilerplate/ui/init/init.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:redux_persist/redux_persist.dart';
+import 'package:redux_persist_flutter/redux_persist_flutter.dart';
+import 'package:redux_thunk/redux_thunk.dart';
 
 void main() {
-  final store = getStore();
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -20,13 +22,22 @@ void main() {
     DeviceOrientation.landscapeRight,
     DeviceOrientation.landscapeLeft,
   ]).then((_) async {
-    runApp(new App(store: store));
+    final persistor = Persistor<AppState>(
+        storage: FlutterStorage(),
+        serializer: JsonSerializer<AppState>(AppState.fromJson));
+    final savedState = await persistor.load();
+    runApp(new App(
+        store: Store<AppState>(
+      appStateReducer,
+      initialState: savedState ?? initState(),
+      middleware: [thunkMiddleware, persistor.createMiddleware()],
+    )));
   });
 }
 
 class App extends StatelessWidget {
   final Store<AppState> store;
-  
+
   App({Key key, this.store}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -63,7 +74,7 @@ class App extends StatelessWidget {
                               supportedLocale.languageCode ==
                               locale.languageCode,
                           orElse: () => supportedLocales.first),
-                  home: SplashScreen(),
+                  home: InitScreen(),
                 )));
   }
 }

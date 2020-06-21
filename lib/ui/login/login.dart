@@ -1,3 +1,4 @@
+import 'package:boilerplate/constants/colors.dart';
 import 'package:boilerplate/redux/actions/auth_actions.dart';
 import 'package:boilerplate/redux/states/auth_state.dart';
 import 'package:boilerplate/redux/store.dart';
@@ -264,8 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget navigateToHome(BuildContext context) {
     Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.home, (Route<dynamic> route) => false);
+      Navigator.of(context).pushReplacementNamed(Routes.home);
     });
 
     return Container();
@@ -273,8 +273,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget navigateToRegister(BuildContext context) {
     Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.register, (Route<dynamic> route) => false);
+      Navigator.of(context).pushReplacementNamed(Routes.register);
     });
 
     return Container();

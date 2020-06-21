@@ -1,6 +1,6 @@
-import 'package:boilerplate/models/krypton/krypton_singleton.dart';
 import 'package:boilerplate/redux/states/auth_state.dart';
 import 'package:boilerplate/redux/states/notify_state.dart';
+import 'package:boilerplate/utils/krypton/krypton_singleton.dart';
 import 'package:krypton/krypton.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
@@ -12,9 +12,9 @@ KryptonClient krypton = KryptonSingleton.getInstance();
 
 ThunkAction<AppState> checkLoginState() {
   return (Store<AppState> store) async {
-    store.dispatch(
-        new TransactionStartAction(AuthTransactionType.CHECK_LOGIN_STATE));
     try {
+      store.dispatch(
+          new TransactionStartAction(AuthTransactionType.CHECK_LOGIN_STATE));
       bool isLoggedIn = await krypton.isLoggedIn();
       store.dispatch(TransactionSucceedAction());
       if (isLoggedIn) {
@@ -28,8 +28,8 @@ ThunkAction<AppState> checkLoginState() {
 
 ThunkAction<AppState> login(String email, String password) {
   return (Store<AppState> store) async {
-    store.dispatch(new TransactionStartAction(AuthTransactionType.LOGIN));
     try {
+      store.dispatch(new TransactionStartAction(AuthTransactionType.LOGIN));
       await krypton.login(email, password);
       store.dispatch(TransactionSucceedAction());
       store.dispatch(new AddloggedUserAction(krypton.user));
@@ -57,9 +57,9 @@ ThunkAction<AppState> registerAndLogin(String email, String password) {
 
 ThunkAction<AppState> recoverPassword(String email) {
   return (Store<AppState> store) async {
-    store.dispatch(
-        new TransactionStartAction(AuthTransactionType.RECOVER_PASSWORD));
     try {
+      store.dispatch(
+          new TransactionStartAction(AuthTransactionType.RECOVER_PASSWORD));
       await krypton.recoverPassword(email);
       store.dispatch(TransactionSucceedAction());
       store.dispatch(NotifyAction(
@@ -73,9 +73,9 @@ ThunkAction<AppState> recoverPassword(String email) {
 ThunkAction<AppState> changePassword(
     String actualPassword, String newPassword) {
   return (Store<AppState> store) async {
-    store.dispatch(
-        new TransactionStartAction(AuthTransactionType.CHANGE_PASSWORD));
     try {
+      store.dispatch(
+          new TransactionStartAction(AuthTransactionType.CHANGE_PASSWORD));
       await krypton.changePassword(actualPassword, newPassword);
       store.dispatch(TransactionSucceedAction());
     } catch (e) {
@@ -86,9 +86,9 @@ ThunkAction<AppState> changePassword(
 
 ThunkAction<AppState> deleteAccount(String password) {
   return (Store<AppState> store) async {
-    store.dispatch(
-        new TransactionStartAction(AuthTransactionType.DELETE_ACCOUNT));
     try {
+      store.dispatch(
+          new TransactionStartAction(AuthTransactionType.DELETE_ACCOUNT));
       await krypton.delete(password);
       store.dispatch(TransactionSucceedAction());
     } catch (e) {
@@ -99,9 +99,9 @@ ThunkAction<AppState> deleteAccount(String password) {
 
 ThunkAction<AppState> updateEmail(String email) {
   return (Store<AppState> store) async {
-    store
-        .dispatch(new TransactionStartAction(AuthTransactionType.UPDATE_EMAIL));
     try {
+      store.dispatch(
+          new TransactionStartAction(AuthTransactionType.UPDATE_EMAIL));
       await krypton.update({'email': email});
       store.dispatch(TransactionSucceedAction());
       store.dispatch(new AddloggedUserAction(krypton.user));
@@ -113,8 +113,8 @@ ThunkAction<AppState> updateEmail(String email) {
 
 ThunkAction<AppState> logout() {
   return (Store<AppState> store) async {
-    store.dispatch(new TransactionStartAction(AuthTransactionType.LOGOUT));
     try {
+      store.dispatch(new TransactionStartAction(AuthTransactionType.LOGOUT));
       await krypton.logout();
       store.dispatch(TransactionSucceedAction());
       store.dispatch(new RemoveloggedUserAction());

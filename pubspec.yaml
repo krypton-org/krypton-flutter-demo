@@ -65,6 +65,9 @@ dependencies:
   redux: ^4.0.0
   redux_thunk: ^0.3.0
   flutter_redux: ^0.6.0
+  redux_persist: ^0.8.4
+  redux_persist_flutter: ^0.8.2
+  flutter_secure_storage: ^3.3.3
   
   krypton:
     path: ../krypton-flutter
@@ -81,17 +84,16 @@ dev_dependencies:
 
   json_serializable: ^3.2.5
   build_runner: ^1.7.3
-  inject_generator:
-    git:
-      url: https://github.com/google/inject.dart.git
-      path: package/inject_generator
-      ref: 7c3cbf6
+  flutter_native_splash: ^0.1.9
+
 
 flutter_icons:
   image_path: "assets/icons/ic_launcher.png"
   android: true
   ios: true
 
+flutter_native_splash:
+  image: assets/icons/ic_launcher.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

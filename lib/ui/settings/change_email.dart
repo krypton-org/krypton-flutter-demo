@@ -36,7 +36,6 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
   // app bar methods:-----------------------------------------------------------
   Widget _buildAppBar() {
     return AppBar(
-        leading: _buildHistoryBackButton(),
         title: Text(
             AppLocalizations.of(context).translate('settings_change_email')),
         actions: <Widget>[_buildValidateButton()]);
@@ -74,17 +73,6 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
             ));
   }
 
-  Widget _buildHistoryBackButton() {
-    return IconButton(
-      onPressed: () {
-        Navigator.of(context).pushReplacementNamed(Routes.settings);
-      },
-      icon: Icon(
-        Icons.arrow_back_ios,
-      ),
-    );
-  }
-
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {
     return Material(
@@ -92,12 +80,12 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
       children: <Widget>[
         Center(child: _buildEmailField()),
         StoreConnector<AppState, bool>(
-            converter: (store) => store.state.auth.isLoading,
-            builder: (context, isLoading) => Visibility(
-              visible: isLoading,
-              child: CustomProgressIndicatorWidget(),
-            ),
-          )
+          converter: (store) => store.state.auth.isLoading,
+          builder: (context, isLoading) => Visibility(
+            visible: isLoading,
+            child: CustomProgressIndicatorWidget(),
+          ),
+        )
       ],
     ));
   }
@@ -108,7 +96,8 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
         padding: new EdgeInsets.all(10.0),
         child: StoreConnector<AppState, AppState>(
             converter: (store) => store.state,
-            onInit: (store) => _emailController.text = store.state.auth.user['email'],
+            onInit: (store) =>
+                _emailController.text = store.state.auth.user['email'],
             builder: (context, state) => TextFormField(
                   decoration: InputDecoration(
                     icon: Icon(Icons.email),

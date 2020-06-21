@@ -17,27 +17,36 @@ class AppState {
   Notification notification;
   ThemeState theme;
   TodoState todos;
-  AppState(this.auth, this.language, this.notification, this.theme, this.todos);
+  AppState(
+      {this.auth, this.language, this.notification, this.theme, this.todos});
+
+  static AppState fromJson(dynamic json) {
+    if (json == null) {
+      return null;
+    } else {
+      return AppState(
+          auth: getInitAuthState(),
+          language: LanguageState.fromJson(json["language"]),
+          notification: getInitNotifyState(),
+          theme: ThemeState.fromJson(json["theme"]),
+          todos: getInitTodoState());
+    }
+  }
+
+  dynamic toJson() => {'language': language.toJson(), 'theme': theme.toJson()};
 }
 
 AppState appStateReducer(AppState state, action) => new AppState(
-  authReducer(state.auth, action),
-  languageReducer(state.language, action),
-  notifyReducer(state.notification, action),
-  themeReducer(state.theme, action),
-  todoReducer(state.todos, action),
-);
+      auth: authReducer(state.auth, action),
+      language: languageReducer(state.language, action),
+      notification: notifyReducer(state.notification, action),
+      theme: themeReducer(state.theme, action),
+      todos: todoReducer(state.todos, action),
+    );
 
 AppState initState() => AppState(
-  getInitAuthState(),
-  getInitLanguageState(),
-  getInitNotifyState(),
-  getInitThemeState(),
-  getInitTodoState()
-);
-
-Store<AppState> getStore() => Store<AppState>(
-    appStateReducer,
-    initialState: initState(),
-    middleware: [thunkMiddleware],
-  );
+    auth: getInitAuthState(),
+    language: getInitLanguageState(),
+    notification: getInitNotifyState(),
+    theme: getInitThemeState(),
+    todos: getInitTodoState());
