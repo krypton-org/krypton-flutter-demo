@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () =>
             Navigator.of(context).pushReplacementNamed(Routes.addTodo),
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildSettingsButton() {
     return IconButton(
       onPressed: () {
-        Navigator.of(context).pushReplacementNamed(Routes.settings);
+        Navigator.of(context).pushNamed(Routes.settings);
       },
       icon: Icon(
         Icons.settings,
