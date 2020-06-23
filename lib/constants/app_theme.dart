@@ -38,6 +38,7 @@ final ThemeData themeData = new ThemeData(
   accentColor: Colors.blue[400],
   accentColorBrightness: Brightness.light,
   buttonColor: Colors.blue[400],
+  floatingActionButtonTheme: FloatingActionButtonThemeData(foregroundColor: Colors.white)
 );
 
 final ThemeData themeDataDark = ThemeData(
