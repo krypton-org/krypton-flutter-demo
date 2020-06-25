@@ -1,3 +1,4 @@
+import 'package:krypton_flutter_demo/utils/krypton/krypton_singleton.dart';
 import 'package:krypton_flutter_demo/constants/app_theme.dart';
 import 'package:krypton_flutter_demo/constants/strings.dart';
 import 'package:krypton_flutter_demo/redux/states/language_state.dart';
@@ -26,6 +27,7 @@ void main() {
         storage: FlutterStorage(),
         serializer: JsonSerializer<AppState>(AppState.fromJson));
     final savedState = await persistor.load();
+    await KryptonSingleton.init();
     runApp(new App(
         store: Store<AppState>(
       appStateReducer,
