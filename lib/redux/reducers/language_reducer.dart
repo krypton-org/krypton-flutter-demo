@@ -1,5 +1,5 @@
-import 'package:boilerplate/redux/actions/language_actions.dart';
-import 'package:boilerplate/redux/states/language_state.dart';
+import 'package:krypton_flutter_demo/redux/actions/language_actions.dart';
+import 'package:krypton_flutter_demo/redux/states/language_state.dart';
 import 'package:redux/redux.dart';
 
 final Reducer<LanguageState> languageReducer = combineReducers<LanguageState>([

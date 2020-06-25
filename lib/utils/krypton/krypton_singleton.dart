@@ -1,4 +1,4 @@
-import 'package:boilerplate/utils/secure_storage/secure_storage_singleton.dart';
+import 'package:krypton_flutter_demo/utils/secure_storage/secure_storage_singleton.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:krypton/krypton.dart';
 

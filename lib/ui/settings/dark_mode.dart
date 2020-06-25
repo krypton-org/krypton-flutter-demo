@@ -1,7 +1,7 @@
-import 'package:boilerplate/redux/actions/theme_action.dart';
-import 'package:boilerplate/redux/store.dart';
-import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:krypton_flutter_demo/redux/actions/theme_action.dart';
+import 'package:krypton_flutter_demo/redux/store.dart';
+import 'package:krypton_flutter_demo/routes.dart';
+import 'package:krypton_flutter_demo/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';

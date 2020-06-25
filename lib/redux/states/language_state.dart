@@ -1,4 +1,4 @@
-import 'package:boilerplate/utils/language/Language.dart';
+import 'package:krypton_flutter_demo/utils/language/Language.dart';
 
 List<Language> supportedLanguages = [
   Language(code: 'US', locale: 'en', language: 'English'),

@@ -1,5 +1,5 @@
-import 'package:boilerplate/redux/actions/theme_action.dart';
-import 'package:boilerplate/redux/states/theme_state.dart';
+import 'package:krypton_flutter_demo/redux/actions/theme_action.dart';
+import 'package:krypton_flutter_demo/redux/states/theme_state.dart';
 import 'package:redux/redux.dart';
 
 final Reducer<ThemeState> themeReducer = combineReducers<ThemeState>([

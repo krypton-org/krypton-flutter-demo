@@ -1,9 +1,9 @@
-import 'package:boilerplate/redux/actions/auth_actions.dart';
-import 'package:boilerplate/routes.dart';
+import 'package:krypton_flutter_demo/redux/actions/auth_actions.dart';
+import 'package:krypton_flutter_demo/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:boilerplate/redux/states/auth_state.dart';
-import 'package:boilerplate/redux/store.dart';
+import 'package:krypton_flutter_demo/redux/states/auth_state.dart';
+import 'package:krypton_flutter_demo/redux/store.dart';
 
 class InitScreen extends StatelessWidget {
   @override

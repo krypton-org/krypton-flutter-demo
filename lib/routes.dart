@@ -1,13 +1,13 @@
-import 'package:boilerplate/ui/home/home.dart';
-import 'package:boilerplate/ui/init/init.dart';
-import 'package:boilerplate/ui/login/login.dart';
-import 'package:boilerplate/ui/todos/add_todo.dart';
-import 'package:boilerplate/ui/register/register.dart';
-import 'package:boilerplate/ui/settings/change_email.dart';
-import 'package:boilerplate/ui/settings/change_password.dart';
-import 'package:boilerplate/ui/settings/dark_mode.dart';
-import 'package:boilerplate/ui/settings/delete_account.dart';
-import 'package:boilerplate/ui/settings/settings.dart';
+import 'package:krypton_flutter_demo/ui/home/home.dart';
+import 'package:krypton_flutter_demo/ui/init/init.dart';
+import 'package:krypton_flutter_demo/ui/login/login.dart';
+import 'package:krypton_flutter_demo/ui/todos/add_todo.dart';
+import 'package:krypton_flutter_demo/ui/register/register.dart';
+import 'package:krypton_flutter_demo/ui/settings/change_email.dart';
+import 'package:krypton_flutter_demo/ui/settings/change_password.dart';
+import 'package:krypton_flutter_demo/ui/settings/dark_mode.dart';
+import 'package:krypton_flutter_demo/ui/settings/delete_account.dart';
+import 'package:krypton_flutter_demo/ui/settings/settings.dart';
 import 'package:flutter/material.dart';
 
 

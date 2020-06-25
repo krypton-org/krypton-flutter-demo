@@ -1,6 +1,6 @@
-import 'package:boilerplate/redux/states/auth_state.dart';
-import 'package:boilerplate/redux/states/notify_state.dart';
-import 'package:boilerplate/utils/krypton/krypton_singleton.dart';
+import 'package:krypton_flutter_demo/redux/states/auth_state.dart';
+import 'package:krypton_flutter_demo/redux/states/notify_state.dart';
+import 'package:krypton_flutter_demo/utils/krypton/krypton_singleton.dart';
 import 'package:krypton/krypton.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';

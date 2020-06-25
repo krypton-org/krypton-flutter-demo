@@ -1,10 +1,10 @@
-import 'package:boilerplate/redux/actions/todo_action.dart';
-import 'package:boilerplate/redux/states/todo_state.dart';
-import 'package:boilerplate/redux/store.dart';
-import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/utils/device/device_utils.dart';
-import 'package:boilerplate/utils/locale/app_localization.dart';
-import 'package:boilerplate/widgets/progress_indicator_widget.dart';
+import 'package:krypton_flutter_demo/redux/actions/todo_action.dart';
+import 'package:krypton_flutter_demo/redux/states/todo_state.dart';
+import 'package:krypton_flutter_demo/redux/store.dart';
+import 'package:krypton_flutter_demo/routes.dart';
+import 'package:krypton_flutter_demo/utils/device/device_utils.dart';
+import 'package:krypton_flutter_demo/utils/locale/app_localization.dart';
+import 'package:krypton_flutter_demo/widgets/progress_indicator_widget.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

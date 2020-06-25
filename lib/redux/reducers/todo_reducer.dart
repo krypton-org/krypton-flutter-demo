@@ -1,5 +1,5 @@
-import 'package:boilerplate/redux/actions/todo_action.dart';
-import 'package:boilerplate/redux/states/todo_state.dart';
+import 'package:krypton_flutter_demo/redux/actions/todo_action.dart';
+import 'package:krypton_flutter_demo/redux/states/todo_state.dart';
 import 'package:redux/redux.dart';
 
 final Reducer<TodoState> todoReducer = combineReducers<TodoState>([

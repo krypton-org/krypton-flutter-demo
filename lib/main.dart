@@ -1,10 +1,10 @@
-import 'package:boilerplate/constants/app_theme.dart';
-import 'package:boilerplate/constants/strings.dart';
-import 'package:boilerplate/redux/states/language_state.dart';
-import 'package:boilerplate/redux/store.dart';
-import 'package:boilerplate/routes.dart';
-import 'package:boilerplate/ui/init/init.dart';
-import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:krypton_flutter_demo/constants/app_theme.dart';
+import 'package:krypton_flutter_demo/constants/strings.dart';
+import 'package:krypton_flutter_demo/redux/states/language_state.dart';
+import 'package:krypton_flutter_demo/redux/store.dart';
+import 'package:krypton_flutter_demo/routes.dart';
+import 'package:krypton_flutter_demo/ui/init/init.dart';
+import 'package:krypton_flutter_demo/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

@@ -1,13 +1,13 @@
-import 'package:boilerplate/redux/reducers/auth_reducer.dart';
-import 'package:boilerplate/redux/reducers/language_reducer.dart';
-import 'package:boilerplate/redux/reducers/notifier_reducer.dart';
-import 'package:boilerplate/redux/reducers/theme_reducer.dart';
-import 'package:boilerplate/redux/reducers/todo_reducer.dart';
-import 'package:boilerplate/redux/states/auth_state.dart';
-import 'package:boilerplate/redux/states/language_state.dart';
-import 'package:boilerplate/redux/states/notify_state.dart';
-import 'package:boilerplate/redux/states/theme_state.dart';
-import 'package:boilerplate/redux/states/todo_state.dart';
+import 'package:krypton_flutter_demo/redux/reducers/auth_reducer.dart';
+import 'package:krypton_flutter_demo/redux/reducers/language_reducer.dart';
+import 'package:krypton_flutter_demo/redux/reducers/notifier_reducer.dart';
+import 'package:krypton_flutter_demo/redux/reducers/theme_reducer.dart';
+import 'package:krypton_flutter_demo/redux/reducers/todo_reducer.dart';
+import 'package:krypton_flutter_demo/redux/states/auth_state.dart';
+import 'package:krypton_flutter_demo/redux/states/language_state.dart';
+import 'package:krypton_flutter_demo/redux/states/notify_state.dart';
+import 'package:krypton_flutter_demo/redux/states/theme_state.dart';
+import 'package:krypton_flutter_demo/redux/states/todo_state.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 

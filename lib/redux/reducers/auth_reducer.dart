@@ -1,5 +1,5 @@
-import 'package:boilerplate/redux/actions/auth_actions.dart';
-import 'package:boilerplate/redux/states/auth_state.dart';
+import 'package:krypton_flutter_demo/redux/actions/auth_actions.dart';
+import 'package:krypton_flutter_demo/redux/states/auth_state.dart';
 import 'package:redux/redux.dart';
 
 final Reducer<AuthState> authReducer = combineReducers<AuthState>([

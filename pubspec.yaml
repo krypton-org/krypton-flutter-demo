@@ -1,5 +1,5 @@
-name: boilerplate
-description: A flutter boilerplate project created using MobX and Provider.
+name: krypton_flutter_demo
+description: A demo application showing how to use Krypton for authentication. It features a complete user space, and gives access to a todo-list.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -81,20 +81,22 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   json_serializable: ^3.2.5
   build_runner: ^1.7.3
   flutter_native_splash: ^0.1.9
 
-
+# Make it effective by running the command:
+# flutter pub run flutter_launcher_icons:main
 flutter_icons:
-  image_path: "assets/icons/ic_launcher.png"
+  image_path: "assets/icons/launcher_logo.png"
   android: true
   ios: true
 
+# Make it effective by running the command:
+# flutter pub pub run flutter_native_splash:create
 flutter_native_splash:
-  image: assets/icons/ic_launcher.png
-  color: white
+  image: assets/icons/splash_logo.png
+  color: ffffff
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
