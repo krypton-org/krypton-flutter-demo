@@ -1,4 +1,3 @@
-
 class DarkThemeAction {}
 
 class BrightThemeAction {}

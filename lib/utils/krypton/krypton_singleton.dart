@@ -8,15 +8,15 @@ class KryptonSingleton {
   static KryptonClient _krypton;
 
   static Future<void> init() async {
-      getInstance();
-      FlutterSecureStorage secureStorage = SecureStorageSingleton.getInstance();
-      String refreshToken =
-          await secureStorage.read(key: refreshTokenPropertyName);
-      try {
-        await _krypton.setRefreshToken(refreshToken);
-      } catch (e) {
-        // refresh token expired
-      }
+    getInstance();
+    FlutterSecureStorage secureStorage = SecureStorageSingleton.getInstance();
+    String refreshToken =
+        await secureStorage.read(key: refreshTokenPropertyName);
+    try {
+      await _krypton.setRefreshToken(refreshToken);
+    } catch (e) {
+      // refresh token expired
+    }
   }
 
   static KryptonClient getInstance() {
@@ -24,8 +24,8 @@ class KryptonSingleton {
       _krypton = KryptonClient(
           endpoint: "https://nusid.net/krypton-auth",
           saveRefreshTokenClbk: (refreshToken) async {
-            await SecureStorageSingleton.getInstance().write(
-                key: refreshTokenPropertyName, value: refreshToken);
+            await SecureStorageSingleton.getInstance()
+                .write(key: refreshTokenPropertyName, value: refreshToken);
           });
     }
     return _krypton;

@@ -97,8 +97,9 @@ ThunkAction<AppState> deleteTodo(String todoId) {
     try {
       Response res = await fetch(deleteTodoQuery(todoId));
       if (res.data['errors'] == null) {
-        List<Todo> todos =
-            store.state.todos.todos.where((current) => current.id != todoId).toList();
+        List<Todo> todos = store.state.todos.todos
+            .where((current) => current.id != todoId)
+            .toList();
         store.dispatch(new TransactionSucceedAction(todos));
       } else {
         throw new Exception('Transaction failed');
@@ -121,7 +122,8 @@ ThunkAction<AppState> completeTodo(String todoId) {
             text: todoData['text'],
             isCompleted: todoData['isCompleted']);
         List<Todo> todos = store.state.todos.todos
-            .map((current) => current.id == todo.id ? todo : current).toList();
+            .map((current) => current.id == todo.id ? todo : current)
+            .toList();
         store.dispatch(new TransactionSucceedAction(todos));
       } else {
         throw new Exception('Transaction failed');

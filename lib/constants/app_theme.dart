@@ -26,20 +26,20 @@ import 'package:krypton_flutter_demo/constants/font_family.dart';
 import 'package:flutter/material.dart';
 
 final ThemeData themeData = new ThemeData(
-  fontFamily: FontFamily.productSans,
-  brightness: Brightness.light,
-  primarySwatch: MaterialColor(Colors.blue[400].value, AppColors.blue),
-  primaryTextTheme: TextTheme(
-      headline1: TextStyle(color: Colors.white),
-      headline6: TextStyle(color: Colors.white)),
-  primaryIconTheme: IconThemeData(color: Colors.white),
-  primaryColor: Colors.blue[400],
-  primaryColorBrightness: Brightness.light,
-  accentColor: Colors.blue[400],
-  accentColorBrightness: Brightness.light,
-  buttonColor: Colors.blue[400],
-  floatingActionButtonTheme: FloatingActionButtonThemeData(foregroundColor: Colors.white)
-);
+    fontFamily: FontFamily.productSans,
+    brightness: Brightness.light,
+    primarySwatch: MaterialColor(Colors.blue[400].value, AppColors.blue),
+    primaryTextTheme: TextTheme(
+        headline1: TextStyle(color: Colors.white),
+        headline6: TextStyle(color: Colors.white)),
+    primaryIconTheme: IconThemeData(color: Colors.white),
+    primaryColor: Colors.blue[400],
+    primaryColorBrightness: Brightness.light,
+    accentColor: Colors.blue[400],
+    accentColorBrightness: Brightness.light,
+    buttonColor: Colors.blue[400],
+    floatingActionButtonTheme:
+        FloatingActionButtonThemeData(foregroundColor: Colors.white));
 
 final ThemeData themeDataDark = ThemeData(
   fontFamily: FontFamily.productSans,

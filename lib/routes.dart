@@ -10,7 +10,6 @@ import 'package:krypton_flutter_demo/ui/settings/delete_account.dart';
 import 'package:krypton_flutter_demo/ui/settings/settings.dart';
 import 'package:flutter/material.dart';
 
-
 class Routes {
   Routes._();
 
@@ -40,6 +39,3 @@ class Routes {
     addTodo: (BuildContext context) => AddTodoScreen(),
   };
 }
-
-
-
