@@ -146,11 +146,8 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
     return SizedBox.shrink();
   }
 
-  Widget navigateToHome(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushReplacementNamed(Routes.home);
-    });
-    return Container();
+  navigateToHome(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed(Routes.home);
   }
 
   // dispose:-------------------------------------------------------------------

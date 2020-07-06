@@ -137,11 +137,8 @@ class _ChangeEmailScreenState extends State<ChangeEmailScreen> {
     return SizedBox.shrink();
   }
 
-  Widget navigateToSettings(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushReplacementNamed(Routes.settings);
-    });
-    return Container();
+  navigateToSettings(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed(Routes.settings);
   }
 
   // dispose:-------------------------------------------------------------------

@@ -263,20 +263,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget navigateToHome(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushReplacementNamed(Routes.home);
-    });
-
-    return Container();
+  navigateToHome(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed(Routes.home);
   }
 
-  Widget navigateToRegister(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushReplacementNamed(Routes.register);
-    });
-
-    return Container();
+  navigateToRegister(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed(Routes.register);
   }
 
   // General Methods:-----------------------------------------------------------

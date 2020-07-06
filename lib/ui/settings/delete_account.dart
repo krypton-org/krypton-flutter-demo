@@ -154,11 +154,8 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
         ));
   }
 
-  Widget navigateToLogin(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushReplacementNamed(Routes.login);
-    });
-    return Container();
+  navigateToLogin(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed(Routes.login);
   }
 
   String _validatePassword(String password) {

@@ -224,21 +224,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 )));
   }
 
-  Widget navigateToHome(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushReplacementNamed(Routes.home);
-    });
-
-    return Container();
+  navigateToHome(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed(Routes.home);
   }
 
-  Widget navigateToLogin(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.login, (Route<dynamic> route) => false);
-    });
-
-    return Container();
+  navigateToLogin(BuildContext context) {
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(Routes.login, (Route<dynamic> route) => false);
   }
 
   // General Methods:-----------------------------------------------------------
