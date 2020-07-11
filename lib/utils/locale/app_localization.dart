@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:krypton_flutter_demo/redux/states/language_state.dart';
 
 class AppLocalizations {
   // localization variables
@@ -57,8 +58,13 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    // Include all of your supported language codes here
-    return ['en', 'es', 'da'].contains(locale.languageCode);
+    bool isSupported = false;
+    supportedLanguages.forEach((language){
+      if (language.locale == locale.languageCode){
+        isSupported = true;
+      }
+    });
+    return isSupported;
   }
 
   @override

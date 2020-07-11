@@ -1,6 +1,6 @@
 import 'package:krypton_flutter_demo/redux/actions/todo_action.dart';
 import 'package:krypton_flutter_demo/redux/states/todo_state.dart';
-import 'package:krypton_flutter_demo/redux/store.dart';
+import 'package:krypton_flutter_demo/redux/states/app_state.dart';
 import 'package:krypton_flutter_demo/routes.dart';
 import 'package:krypton_flutter_demo/utils/device/device_utils.dart';
 import 'package:krypton_flutter_demo/utils/locale/app_localization.dart';

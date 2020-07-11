@@ -1,7 +1,7 @@
 import 'package:krypton_flutter_demo/constants/colors.dart';
 import 'package:krypton_flutter_demo/redux/actions/auth_actions.dart';
 import 'package:krypton_flutter_demo/redux/states/auth_state.dart';
-import 'package:krypton_flutter_demo/redux/store.dart';
+import 'package:krypton_flutter_demo/redux/states/app_state.dart';
 import 'package:krypton_flutter_demo/routes.dart';
 import 'package:krypton_flutter_demo/utils/device/device_utils.dart';
 import 'package:krypton_flutter_demo/utils/locale/app_localization.dart';

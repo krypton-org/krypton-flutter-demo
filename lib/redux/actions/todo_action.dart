@@ -1,10 +1,9 @@
+import 'package:krypton_flutter_demo/redux/states/app_state.dart';
 import 'package:krypton_flutter_demo/redux/states/todo_state.dart';
 import 'package:krypton_flutter_demo/utils/krypton/krypton_singleton.dart';
 import 'package:dio/dio.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
-
-import '../store.dart';
 
 Map<String, dynamic> addTodoQuery(String text, String userId) {
   return {

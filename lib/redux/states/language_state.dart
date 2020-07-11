@@ -17,23 +17,11 @@ class LanguageState {
 
   dynamic toJson() => {'locale': _locale};
 
-  String getCode() {
-    var code;
-    if (_locale == 'en') {
-      code = "US";
-    } else if (_locale == 'da') {
-      code = "DK";
-    } else if (_locale == 'es') {
-      code = "ES";
-    }
-    return code;
-  }
-
   String getLanguage() {
     return supportedLanguages[supportedLanguages
             .indexWhere((language) => language.locale == _locale)]
         .language;
   }
 }
-
-LanguageState getInitLanguageState() => LanguageState('en');
+// Pass null in argument to use the phone's defined language.
+LanguageState getInitLanguageState() => LanguageState(null);

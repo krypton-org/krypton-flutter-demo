@@ -1,5 +1,5 @@
 import 'package:krypton_flutter_demo/redux/actions/theme_action.dart';
-import 'package:krypton_flutter_demo/redux/store.dart';
+import 'package:krypton_flutter_demo/redux/states/app_state.dart';
 import 'package:krypton_flutter_demo/routes.dart';
 import 'package:krypton_flutter_demo/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';

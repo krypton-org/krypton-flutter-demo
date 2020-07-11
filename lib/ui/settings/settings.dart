@@ -1,13 +1,13 @@
+import 'package:krypton_flutter_demo/redux/actions/app_actions.dart';
 import 'package:krypton_flutter_demo/redux/actions/auth_actions.dart';
 import 'package:krypton_flutter_demo/redux/actions/language_actions.dart';
 import 'package:krypton_flutter_demo/redux/states/auth_state.dart';
 import 'package:krypton_flutter_demo/redux/states/language_state.dart';
-import 'package:krypton_flutter_demo/redux/store.dart';
+import 'package:krypton_flutter_demo/redux/states/app_state.dart';
 import 'package:krypton_flutter_demo/routes.dart';
 import 'package:krypton_flutter_demo/utils/krypton/krypton_singleton.dart';
 import 'package:krypton_flutter_demo/utils/locale/app_localization.dart';
 import 'package:krypton_flutter_demo/widgets/progress_indicator_widget.dart';
-import 'package:flushbar/flushbar_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -176,19 +176,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
             converter: (store) {
               return _LogoutTileModel(
                   auth: store.state.auth,
-                  logout: () => store.dispatch(logout()));
+                  logout: () => store.dispatch(logout()),
+                  resetState: () => store.dispatch(new ResetStateAction()));
             },
-            onWillChange: (previousViewModel, newViewModel) async {
+            onWillChange: (previousViewModel, newViewModel) {
               if (previousViewModel.auth.transactionType ==
                       AuthTransactionType.LOGOUT &&
                   newViewModel.auth.isSuccess == true) {
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     Routes.login, (Route<dynamic> route) => false);
+                newViewModel.resetState();
               }
               if (previousViewModel.auth.transactionType ==
                       AuthTransactionType.LOGOUT &&
                   newViewModel.auth.isSuccess == false) {
-                (await KryptonSingleton.getInstance()).reinitialize();
+                (KryptonSingleton.getInstance()).reinitialize();
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     Routes.login, (Route<dynamic> route) => false);
               }
@@ -265,29 +267,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showDialog<T>(
       context: context,
       builder: (BuildContext context) => child,
-    ).then<void>((T value) {
-      // The value passed to Navigator.pop() or null.
-    });
-  }
-
-  // General Methods:-----------------------------------------------------------
-  _showErrorMessage(String message) {
-    Future.delayed(Duration(milliseconds: 0), () {
-      if (message != null && message.isNotEmpty) {
-        FlushbarHelper.createError(
-          message: message,
-          title: AppLocalizations.of(context).translate('global_error'),
-          duration: Duration(seconds: 3),
-        )..show(context);
-      }
-    });
-
-    return SizedBox.shrink();
+    );
   }
 }
 
 class _LogoutTileModel {
   final AuthState auth;
   final VoidCallback logout;
-  _LogoutTileModel({this.auth, this.logout});
+  final Function resetState;
+  _LogoutTileModel({this.auth, this.logout, this.resetState});
 }

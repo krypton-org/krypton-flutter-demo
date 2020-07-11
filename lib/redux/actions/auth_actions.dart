@@ -1,12 +1,11 @@
+import 'package:krypton_flutter_demo/redux/actions/notify_action.dart';
+import 'package:krypton_flutter_demo/redux/states/app_state.dart';
 import 'package:krypton_flutter_demo/redux/states/auth_state.dart';
 import 'package:krypton_flutter_demo/redux/states/notify_state.dart';
 import 'package:krypton_flutter_demo/utils/krypton/krypton_singleton.dart';
 import 'package:krypton/krypton.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
-
-import '../store.dart';
-import 'notify_action.dart';
 
 KryptonClient krypton = KryptonSingleton.getInstance();
 

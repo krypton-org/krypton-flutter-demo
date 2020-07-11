@@ -1,6 +1,6 @@
 import 'package:krypton_flutter_demo/redux/actions/auth_actions.dart';
 import 'package:krypton_flutter_demo/redux/states/auth_state.dart';
-import 'package:krypton_flutter_demo/redux/store.dart';
+import 'package:krypton_flutter_demo/redux/states/app_state.dart';
 import 'package:krypton_flutter_demo/routes.dart';
 import 'package:krypton_flutter_demo/utils/device/device_utils.dart';
 import 'package:krypton_flutter_demo/utils/locale/app_localization.dart';
@@ -170,10 +170,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Widget navigateToSettings(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 0), () {
-      Navigator.of(context).pushReplacementNamed(Routes.settings);
-    });
-    return Container();
+    Navigator.of(context).pushReplacementNamed(Routes.settings);
   }
 
   // General Methods:-----------------------------------------------------------

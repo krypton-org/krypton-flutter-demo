@@ -3,7 +3,7 @@ import 'package:krypton_flutter_demo/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:krypton_flutter_demo/redux/states/auth_state.dart';
-import 'package:krypton_flutter_demo/redux/store.dart';
+import 'package:krypton_flutter_demo/redux/states/app_state.dart';
 
 class InitScreen extends StatelessWidget {
   @override

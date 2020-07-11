@@ -1,8 +1,9 @@
+import 'package:krypton_flutter_demo/redux/reducers/app_reducer.dart';
+import 'package:krypton_flutter_demo/redux/states/app_state.dart';
 import 'package:krypton_flutter_demo/utils/krypton/krypton_singleton.dart';
 import 'package:krypton_flutter_demo/constants/app_theme.dart';
 import 'package:krypton_flutter_demo/constants/strings.dart';
 import 'package:krypton_flutter_demo/redux/states/language_state.dart';
-import 'package:krypton_flutter_demo/redux/store.dart';
 import 'package:krypton_flutter_demo/routes.dart';
 import 'package:krypton_flutter_demo/ui/init/init.dart';
 import 'package:krypton_flutter_demo/utils/locale/app_localization.dart';
@@ -30,7 +31,7 @@ void main() {
     await KryptonSingleton.init();
     runApp(new App(
         store: Store<AppState>(
-      appStateReducer,
+      appReducer,
       initialState: savedState ?? initState(),
       middleware: [thunkMiddleware, persistor.createMiddleware()],
     )));
@@ -54,7 +55,7 @@ class App extends StatelessWidget {
                   title: Strings.appName,
                   theme: model.isDark ? themeDataDark : themeData,
                   routes: Routes.routes,
-                  locale: Locale(model.locale),
+                  locale: model.locale != null ? Locale(model.locale) : null,
                   supportedLocales: supportedLanguages
                       .map((language) => Locale(language.locale, language.code))
                       .toList(),

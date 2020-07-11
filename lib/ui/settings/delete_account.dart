@@ -1,6 +1,7 @@
+import 'package:krypton_flutter_demo/redux/actions/app_actions.dart';
 import 'package:krypton_flutter_demo/redux/actions/auth_actions.dart';
 import 'package:krypton_flutter_demo/redux/states/auth_state.dart';
-import 'package:krypton_flutter_demo/redux/store.dart';
+import 'package:krypton_flutter_demo/redux/states/app_state.dart';
 import 'package:krypton_flutter_demo/routes.dart';
 import 'package:krypton_flutter_demo/utils/locale/app_localization.dart';
 import 'package:krypton_flutter_demo/widgets/progress_indicator_widget.dart';
@@ -18,9 +19,6 @@ class DeleteAccountScreen extends StatefulWidget {
 class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
   //text controllers:-----------------------------------------------------------
   TextEditingController _passwordController = TextEditingController();
-
-  //form key:-------------------------------------------------------------------
-  final _formKey = GlobalKey<FormState>();
 
   bool passwordVisible = false;
 
@@ -98,19 +96,22 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                 converter: (store) => _DeleteModel(
                     state: store.state,
                     deleteAccount: (String password) =>
-                        store.dispatch(deleteAccount(password))),
-                onWillChange: (previousViewModel, newViewModel) => {
-                      if (previousViewModel.state.auth.transactionType ==
-                              AuthTransactionType.DELETE_ACCOUNT &&
-                          previousViewModel.state.auth.isLoading == true &&
-                          newViewModel.state.auth.isSuccess == true)
-                        {navigateToLogin(context)}
-                      else if (previousViewModel.state.auth.transactionType ==
-                              AuthTransactionType.DELETE_ACCOUNT &&
-                          previousViewModel.state.auth.isLoading == true &&
-                          newViewModel.state.auth.isSuccess == false)
-                        {_showErrorMessage(newViewModel.state.auth.error)}
-                    },
+                        store.dispatch(deleteAccount(password)),
+                    resetState: () => store.dispatch(new ResetStateAction())),
+                onWillChange: (previousViewModel, newViewModel) {
+                  if (previousViewModel.state.auth.transactionType ==
+                          AuthTransactionType.DELETE_ACCOUNT &&
+                      previousViewModel.state.auth.isLoading == true &&
+                      newViewModel.state.auth.isSuccess == true) {
+                    navigateToLogin(context);
+                    newViewModel.resetState();
+                  } else if (previousViewModel.state.auth.transactionType ==
+                          AuthTransactionType.DELETE_ACCOUNT &&
+                      previousViewModel.state.auth.isLoading == true &&
+                      newViewModel.state.auth.isSuccess == false) {
+                    _showErrorMessage(newViewModel.state.auth.error);
+                  }
+                },
                 builder: (context, model) => Container(
                     padding: EdgeInsets.all(10.0),
                     child: CupertinoButton(
@@ -154,7 +155,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
         ));
   }
 
-  navigateToLogin(BuildContext context) {
+  void navigateToLogin(BuildContext context) {
     Navigator.of(context).pushReplacementNamed(Routes.login);
   }
 
@@ -171,9 +172,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
     showDialog<T>(
       context: context,
       builder: (BuildContext context) => child,
-    ).then<void>((T value) {
-      // The value passed to Navigator.pop() or null.
-    });
+    );
   }
 
   // General Methods:-----------------------------------------------------------
@@ -203,5 +202,6 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
 class _DeleteModel {
   final AppState state;
   final Function(String) deleteAccount;
-  _DeleteModel({this.state, this.deleteAccount});
+  final Function resetState;
+  _DeleteModel({this.state, this.deleteAccount, this.resetState});
 }
